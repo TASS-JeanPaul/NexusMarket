@@ -5,20 +5,8 @@ Modelo de datos del marketplace NexusMarket.
 ## Requisitos
 
 - Java 17
-- PostgreSQL
 
 No hace falta instalar Maven: el proyecto trae el wrapper (`mvnw.cmd`).
-
-## Base de datos
-
-Antes de arrancar hay que crear la base:
-
-```sql
-CREATE DATABASE nexusmarket;
-```
-
-Los datos de conexion estan en `src/main/resources/application.properties`.
-Hibernate crea las tablas solo (`spring.jpa.hibernate.ddl-auto=update`).
 
 ## Ejecutar
 
