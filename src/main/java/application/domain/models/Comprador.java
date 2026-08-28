@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.domain.enums.EstadoComercial;
+
 @Getter
 @Setter
 public class Comprador {

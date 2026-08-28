@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import application.domain.enums.EstadoUsuario;
+import application.domain.enums.Rol;
+
 @Getter
 @Setter
 
