@@ -8,10 +8,10 @@ import lombok.Setter;
 public class Direccion {
 
     private Long id;
-    private Long compradorId; // CAMBIO: De objeto 'Comprador' a su ID numérico
+    private Long compradorId; 
     private String direccion;
     private String ciudad;
     private String departamento;
-    private String observaciones; // Puede ser null
+    private String observaciones;
     private boolean principal;
 }
