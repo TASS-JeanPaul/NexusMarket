@@ -6,6 +6,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import application.domain.enums.EstadoFactura;
+
 @Getter
 @Setter
 public class Factura {

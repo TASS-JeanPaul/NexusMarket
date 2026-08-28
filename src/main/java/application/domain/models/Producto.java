@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.domain.enums.EstadoProducto;
+import application.domain.enums.TipoProducto;
+
 @Getter
 @Setter
 
