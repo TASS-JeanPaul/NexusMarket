@@ -1,6 +1,5 @@
 package application.domain.models;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,6 @@ import application.domain.enums.Rol;
 
 @Getter
 @Setter
-
 public class Usuario {
 
     private Long id;

@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 public class DetallePedido {
 
     private Long id;
-    private Long pedidoId;  
-    private Long productoId;  
+    private Long pedidoId;
+    private Long productoId;
     private Long varianteId;
     private String nombreProducto;
     private int cantidad;

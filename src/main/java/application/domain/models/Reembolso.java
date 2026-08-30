@@ -1,6 +1,5 @@
 package application.domain.models;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,15 +11,14 @@ import application.domain.enums.MetodoReembolso;
 
 @Getter
 @Setter
-
 public class Reembolso {
 
     private Long id;
-    private Devolucion devolucion;
+    private Long devolucionId;
     private BigDecimal monto;
     private MetodoReembolso metodo;
     private EstadoReembolso estado;
-    private Usuario autorizadoPor;
+    private Long autorizadoPorId;
     private LocalDateTime fechaSolicitud;
     private LocalDateTime fechaPago;
 }

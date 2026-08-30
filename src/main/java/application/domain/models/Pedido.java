@@ -12,13 +12,12 @@ import application.domain.enums.EstadoPedido;
 
 @Getter
 @Setter
-
 public class Pedido {
 
     private Long id;
     private String numeroPedido;
-    private Comprador comprador;
-    private Direccion direccionEntrega;
+    private Long compradorId;
+    private Long direccionEntregaId;
     private List<DetallePedido> detalles = new ArrayList<>();
     private EstadoPedido estado;
     private BigDecimal total;

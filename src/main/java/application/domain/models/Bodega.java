@@ -13,7 +13,7 @@ public class Bodega {
     private String nombre;
     private String direccion;
     private String ciudad;
-    private TipoBodega tipo; 
+    private TipoBodega tipo;
     private Long vendedorId;
     private boolean activa;
 }

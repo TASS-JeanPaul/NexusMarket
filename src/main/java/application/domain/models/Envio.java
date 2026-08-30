@@ -12,9 +12,9 @@ import application.domain.enums.EstadoEnvio;
 public class Envio {
 
     private Long id;
-    private Pedido pedido;
-    private Bodega bodegaOrigen;
-    private Usuario operadorLogistico;
+    private Long pedidoId;
+    private Long bodegaOrigenId;
+    private Long operadorLogisticoId;
     private String numeroGuia;
     private String transportadora;
     private String direccionEntrega;

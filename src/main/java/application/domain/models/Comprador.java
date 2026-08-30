@@ -3,19 +3,24 @@ package application.domain.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import application.domain.enums.EstadoComercial;
+import application.domain.enums.Rol;
 
+/**
+ * Un comprador es un usuario del marketplace, y ademas guarda
+ * la informacion que necesita para comprar.
+ */
 @Getter
 @Setter
-public class Comprador {
+public class Comprador extends Usuario {
 
-    private Long id;
-    private Long usuarioId; 
-    private EstadoComercial estadoComercial; 
-    private LocalDateTime fechaRegistro;
-    private List<Direccion> direcciones = new ArrayList<>(); 
+    private EstadoComercial estadoComercial;
+    private List<Direccion> direcciones = new ArrayList<>();
+
+    public Comprador() {
+        setRol(Rol.COMPRADOR);
+    }
 }

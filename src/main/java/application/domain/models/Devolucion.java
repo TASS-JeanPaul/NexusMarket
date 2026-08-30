@@ -15,12 +15,12 @@ public class Devolucion {
 
     private Long id;
     private String numeroDevolucion;
-    private Long pedidoId;       
-    private Long compradorId;    
-    private List<DetalleDevolucion> detalles = new ArrayList<>(); 
+    private Long pedidoId;
+    private Long compradorId;
+    private List<DetalleDevolucion> detalles = new ArrayList<>();
     private String motivo;
     private EstadoDevolucion estado;
-    private Long revisadoPorId;  
+    private Long revisadoPorId;
     private LocalDateTime fechaSolicitud;
-    private LocalDateTime fechaCierre; 
+    private LocalDateTime fechaCierre;
 }

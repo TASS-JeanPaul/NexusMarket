@@ -9,16 +9,14 @@ import application.domain.enums.TipoMovimiento;
 
 @Getter
 @Setter
-
 public class MovimientoInventario {
-
 
     private Long id;
 
-    private Inventario inventario;
+    private Long inventarioId;
     private TipoMovimiento tipo;
     private int cantidad;
-    private Usuario usuario;
+    private Long usuarioId;
     private String observacion;
     private LocalDateTime fecha;
 }

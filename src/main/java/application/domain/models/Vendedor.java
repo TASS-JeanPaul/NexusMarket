@@ -1,24 +1,23 @@
 package application.domain.models;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import application.domain.enums.Rol;
 
-import application.domain.enums.EstadoVendedor;
-
+/**
+ * Un vendedor es un usuario del marketplace con los datos de su empresa.
+ * No se puede registrar solo: lo incorpora un administrador.
+ */
 @Getter
 @Setter
+public class Vendedor extends Usuario {
 
-public class Vendedor {
-
-    private Long id;
-    private Usuario usuario;
     private String razonSocial;
     private String nit;
-    private String telefonoContacto;
-    private EstadoVendedor estado;
-    private Usuario registradoPor;
-    private LocalDateTime fechaRegistro;
+    private Long registradoPorId;
+
+    public Vendedor() {
+        setRol(Rol.VENDEDOR);
+    }
 }

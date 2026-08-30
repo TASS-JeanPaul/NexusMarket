@@ -12,10 +12,9 @@ import application.domain.enums.EstadoFactura;
 @Setter
 public class Factura {
 
-  
     private Long id;
     private String numeroFactura;
-    private Pedido pedido;
+    private Long pedidoId;
     private BigDecimal subtotal;
     private BigDecimal impuestos;
     private BigDecimal total;

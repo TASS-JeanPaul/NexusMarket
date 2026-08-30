@@ -13,8 +13,8 @@ import java.util.List;
 public class Carrito {
 
     private Long id;
-    private Long compradorId; 
-    private List<ItemCarrito> items = new ArrayList<>(); 
+    private Long compradorId;
+    private List<ItemCarrito> items = new ArrayList<>();
     private BigDecimal total;
     private boolean activo;
     private LocalDateTime fechaCreacion;
