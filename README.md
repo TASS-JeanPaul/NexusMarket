@@ -35,8 +35,9 @@ src/main/java/application/
 
 No se usa Jakarta Persistence (JPA). El acceso a la base se hace con JDBC:
 
-- `ConexionBD` administra una unica conexion (patron Singleton) y la vuelve a
-  abrir si se cerro o se perdio.
+- `ConexionBD` lee la configuracion una sola vez (patron Singleton) y entrega
+  una conexion nueva por cada operacion, para que varias personas puedan usar
+  la aplicacion al mismo tiempo sin pisarse.
 - `IRepositorio<T>` define las operaciones que todo repositorio debe cumplir:
   `listarTodos`, `buscarPorId`, `guardar`, `actualizar` y `eliminar`.
 - `RepositorioBase<T>` es una clase abstracta que ya resuelve las consultas que

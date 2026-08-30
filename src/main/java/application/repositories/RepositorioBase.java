@@ -15,6 +15,9 @@ import java.util.Optional;
  * Resuelve las operaciones que son iguales para todas las tablas.
  * Cada repositorio concreto solo tiene que decir sobre que tabla trabaja
  * y como convertir una fila en un objeto.
+ *
+ * Todas las consultas piden su propia conexion y la cierran al terminar,
+ * asi la aplicacion puede atender a varias personas al mismo tiempo.
  */
 public abstract class RepositorioBase<T> implements IRepositorio<T> {
 
@@ -31,7 +34,8 @@ public abstract class RepositorioBase<T> implements IRepositorio<T> {
         String sql = "SELECT * FROM " + getNombreTabla();
         List<T> lista = new ArrayList<>();
 
-        try (PreparedStatement sentencia = getConexion().prepareStatement(sql);
+        try (Connection conexion = getConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql);
              ResultSet resultado = sentencia.executeQuery()) {
 
             while (resultado.next()) {
@@ -45,7 +49,9 @@ public abstract class RepositorioBase<T> implements IRepositorio<T> {
     public Optional<T> buscarPorId(Long id) throws SQLException {
         String sql = "SELECT * FROM " + getNombreTabla() + " WHERE id = ?";
 
-        try (PreparedStatement sentencia = getConexion().prepareStatement(sql)) {
+        try (Connection conexion = getConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
             sentencia.setLong(1, id);
 
             try (ResultSet resultado = sentencia.executeQuery()) {
@@ -61,7 +67,9 @@ public abstract class RepositorioBase<T> implements IRepositorio<T> {
     public boolean eliminar(Long id) throws SQLException {
         String sql = "DELETE FROM " + getNombreTabla() + " WHERE id = ?";
 
-        try (PreparedStatement sentencia = getConexion().prepareStatement(sql)) {
+        try (Connection conexion = getConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
             sentencia.setLong(1, id);
             return sentencia.executeUpdate() > 0;
         }
