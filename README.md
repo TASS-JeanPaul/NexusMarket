@@ -1,75 +1,75 @@
 # NexusMarket
 
-Marketplace que conecta compradores y vendedores.
-Este proyecto contiene el modelo del negocio y la capa de acceso a datos.
+Marketplace that connects buyers and sellers.
+This project contains the business model and the data access layer.
 
-## Requisitos
+## Requirements
 
 - Java 17
 
-No hace falta instalar Maven: el proyecto trae el wrapper (`mvnw.cmd`).
+Maven does not need to be installed: the project ships the wrapper (`mvnw.cmd`).
 
-## Ejecutar
+## Run
 
 ```
 mvnw.cmd spring-boot:run
 ```
 
-## Estructura
+## Structure
 
 ```
 src/main/java/application/
 ├── config/
-│   └── ConexionBD.java          conexion JDBC (Singleton)
+│   └── DatabaseConnection.java   JDBC connection (Singleton)
 ├── domain/
-│   ├── enums/                   catalogos de estados y tipos
+│   ├── enums/                    status and type catalogues
 │   ├── interfaces/
-│   │   └── IRepositorio.java    contrato de los repositorios
-│   └── models/                  clases del negocio
+│   │   └── IRepository.java      repository contract
+│   └── models/                   business classes
 ├── repositories/
-│   └── RepositorioBase.java     operaciones comunes a toda tabla
+│   └── BaseRepository.java       operations common to every table
 └── NexusMarketApplication.java
 ```
 
-## Acceso a datos
+## Data access
 
-No se usa Jakarta Persistence (JPA). El acceso a la base se hace con JDBC:
+Jakarta Persistence (JPA) is not used. The database is accessed through JDBC:
 
-- `ConexionBD` lee la configuracion una sola vez (patron Singleton) y entrega
-  una conexion nueva por cada operacion, para que varias personas puedan usar
-  la aplicacion al mismo tiempo sin pisarse.
-- `IRepositorio<T>` define las operaciones que todo repositorio debe cumplir:
-  `listarTodos`, `buscarPorId`, `guardar`, `actualizar` y `eliminar`.
-- `RepositorioBase<T>` es una clase abstracta que ya resuelve las consultas que
-  son iguales para cualquier tabla. Cada repositorio concreto solo indica sobre
-  que tabla trabaja y como convertir una fila en un objeto.
+- `DatabaseConnection` reads the configuration only once (Singleton pattern) and
+  hands out a new connection for every operation, so several people can use the
+  application at the same time without interfering with each other.
+- `IRepository<T>` defines the operations every repository must fulfil:
+  `findAll`, `findById`, `save`, `update` and `delete`.
+- `BaseRepository<T>` is an abstract class that already solves the queries that
+  are the same for any table. Each concrete repository only states which table
+  it works on and how to turn a row into an object.
 
-Los modelos guardan las relaciones con el identificador de la otra tabla
-(`Long pedidoId`, `Long compradorId`), igual que las columnas de la base.
+Models hold relations through the identifier of the other table
+(`Long orderId`, `Long buyerId`), just like the database columns do.
 
-## Herencia
+## Inheritance
 
-| Clase padre | Clases hijas                       | Motivo                                                          |
-|-------------|------------------------------------|-----------------------------------------------------------------|
-| `Usuario`   | `Comprador`, `Vendedor`            | Ambos son usuarios del sistema y cada uno cumple un unico rol    |
-| `Producto`  | `ProductoFisico`, `ProductoDigital`| El fisico requiere inventario y despacho; el digital se entrega al pagar |
+| Parent class | Child classes                     | Reason                                                              |
+|--------------|-----------------------------------|---------------------------------------------------------------------|
+| `User`       | `Buyer`, `Seller`                 | Both are system users and each one holds a single role               |
+| `Product`    | `PhysicalProduct`, `DigitalProduct` | Physical products need stock and shipping; digital ones are delivered once paid |
 
-`Producto` es abstracta y obliga a sus hijas a responder `getTipo()`,
-`requiereEnvio()` y `manejaInventario()`.
+`Product` is abstract and forces its children to answer `getType()`,
+`requiresShipping()` and `managesInventory()`.
 
-## Modelos
+## Models
 
-| Dominio      | Clases                                                             |
-|--------------|--------------------------------------------------------------------|
-| Usuarios     | Usuario, Rol, EstadoUsuario                                        |
-| Compradores  | Comprador, Direccion, EstadoComercial                              |
-| Vendedores   | Vendedor                                                           |
-| Bodegas      | Bodega, TipoBodega                                                 |
-| Catalogo     | Producto, ProductoFisico, ProductoDigital, Variante, Categoria, TipoProducto, EstadoProducto |
-| Inventario   | Inventario, MovimientoInventario, TipoMovimiento, EstadoInventario |
-| Carrito      | Carrito, ItemCarrito                                               |
-| Pedidos      | Pedido, DetallePedido, EstadoPedido                                |
-| Facturacion  | Factura, EstadoFactura                                             |
-| Envios       | Envio, EstadoEnvio                                                 |
-| Devoluciones | Devolucion, DetalleDevolucion, EstadoDevolucion                    |
-| Reembolsos   | Reembolso, EstadoReembolso, MetodoReembolso                        |
+| Domain     | Classes                                                                    |
+|------------|----------------------------------------------------------------------------|
+| Users      | User, Role, UserStatus                                                     |
+| Buyers     | Buyer, Address, CommercialStatus                                           |
+| Sellers    | Seller                                                                     |
+| Warehouses | Warehouse, WarehouseType                                                   |
+| Catalogue  | Product, PhysicalProduct, DigitalProduct, Variant, Category, ProductType, ProductStatus |
+| Inventory  | Inventory, InventoryMovement, MovementType, InventoryStatus                |
+| Cart       | Cart, CartItem                                                             |
+| Orders     | Order, OrderDetail, OrderStatus                                            |
+| Invoicing  | Invoice, InvoiceStatus                                                     |
+| Shipping   | Shipment, ShipmentStatus                                                   |
+| Returns    | ProductReturn, ProductReturnDetail, ReturnStatus                           |
+| Refunds    | Refund, RefundStatus, RefundMethod                                         |
