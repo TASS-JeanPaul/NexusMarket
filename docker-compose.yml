@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nexusmarket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nexusmarket
+      POSTGRES_USER: nexusmarket
+      POSTGRES_PASSWORD: nexusmarket
+    ports:
+      - "5433:5432"
+    volumes:
+      - nexusmarket-data:/var/lib/postgresql/data
+      - ./src/main/resources/db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nexusmarket -d nexusmarket"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  nexusmarket-data:

@@ -10,15 +10,33 @@ of: data management, model management and dialog management.
 
 Maven does not need to be installed: the project ships the wrapper (`mvnw.cmd`).
 
+## Database
+
+The project ships its own PostgreSQL in Docker, on port 5433 so it does not
+collide with any other database on the machine.
+
+```
+docker compose up -d
+```
+
+The first time the container is created it runs `01-schema.sql` and then
+`02-seed.sql` from `src/main/resources/db/`, so the tables and a small coherent
+set of data are ready without any extra step.
+
+Those two scripts only run when the volume is empty. After changing the schema
+the database has to be recreated:
+
+```
+docker compose down -v
+docker compose up -d
+```
+
 ## Run
 
 ```
+docker compose up -d
 mvnw.cmd spring-boot:run
 ```
-
-The application starts once the concrete JDBC repositories exist. Until then the
-services are compiled and ready, but Spring has no implementation to inject into
-them, so only `mvnw.cmd compile` finishes successfully.
 
 ## Structure
 
@@ -33,7 +51,8 @@ src/main/java/application/
 │   ├── enums/                        status and type catalogues
 │   ├── contracts/                    repository contracts
 │   └── repositories/
-│       └── BaseRepository.java       operations common to every table
+│       ├── BaseRepository.java       operations common to every table
+│       └── ...                       one repository per contract
 ├── models/                       model management subsystem
 │   └── services/
 │       ├── BaseService.java          validation and error handling shared by services
@@ -78,6 +97,31 @@ Models hold relations through the identifier of the other table
 
 `Product` is abstract and forces its children to answer `getType()`,
 `requiresShipping()` and `managesInventory()`.
+
+### How each hierarchy reaches the database
+
+The two hierarchies are stored differently, following the same criterion that
+justified the inheritance in the first place.
+
+`Buyer` and `Seller` add data of their own, so each one gets its own table whose
+primary key is also a foreign key to `app_user`:
+
+```
+app_user (id, full_name, identity_document, email, ...)
+buyer    (id -> app_user.id, commercial_status)
+seller   (id -> app_user.id, business_name, tax_id, registered_by_id)
+```
+
+That single column states "a buyer is a user": there cannot be a buyer without
+its user, and two buyers cannot share one user. `BuyerRepository` and
+`SellerRepository` are the only ones that write to two tables, and they override
+`findById` and `findAll` because the inherited query reads a single table.
+
+`PhysicalProduct` and `DigitalProduct` add no data at all, only behaviour, so
+they share the `product` table and a `type` column tells them apart.
+`ProductRepository.mapRow` reads that column and builds the right subclass,
+which is the one place where the polymorphism is rebuilt out of the database.
+Everything above it keeps talking to `Product`.
 
 ## Services
 
@@ -124,19 +168,17 @@ sits underneath.
 
 In the order they need to be built:
 
-1. The database schema. No DDL script exists yet, so there are no tables to
-   query.
-2. The concrete JDBC repositories, one per contract. Until they exist the
-   application compiles but does not start.
-3. The decision models of the DSS, inside `models/indicators/`: inventory
+1. The decision models of the DSS, inside `models/indicators/`: inventory
    restocking, seller performance, catalogue profitability and after sales
    quality. They read aggregated queries over the transactional tables.
-4. The dialog subsystem, inside `dialog/`, which exposes those indicators.
+2. The dialog subsystem, inside `dialog/`, which exposes those indicators.
 
 Separately, the service operations that touch several tables, such as the
 checkout, are not atomic yet: `BaseRepository` opens one connection per
 operation, so a failure halfway through leaves the previous steps applied.
 Sharing the connection of the operation in progress is the step that closes it.
+The same gap affects saving a buyer or a seller, which writes two rows: if the
+second insert fails, the first one stays.
 
 ## Models
 
