@@ -1,8 +1,8 @@
 # NexusMarket
 
-Marketplace that connects buyers and sellers.
-This project contains the business model, the data access layer and the
-service layer that holds the business rules.
+Marketplace that connects buyers and sellers, built as a decision support
+system (DSS). The code is organised into the three subsystems a DSS is made
+of: data management, model management and dialog management.
 
 ## Requirements
 
@@ -22,22 +22,36 @@ them, so only `mvnw.cmd compile` finishes successfully.
 
 ## Structure
 
+Each first level folder is one subsystem of the DSS.
+
 ```
 src/main/java/application/
-├── config/
-│   └── DatabaseConnection.java   JDBC connection (Singleton)
-├── domain/
-│   ├── enums/                    status and type catalogues
-│   ├── exceptions/               business, not found and data access errors
-│   ├── interfaces/               repository contracts
-│   └── models/                   business classes
-├── repositories/
-│   └── BaseRepository.java       operations common to every table
-├── services/
-│   ├── BaseService.java          validation and error handling shared by services
-│   └── ...                       one service per functional domain
+├── data/                         data management subsystem
+│   ├── config/
+│   │   └── DatabaseConnection.java   JDBC connection (Singleton)
+│   ├── entities/                     business classes
+│   ├── enums/                        status and type catalogues
+│   ├── contracts/                    repository contracts
+│   └── repositories/
+│       └── BaseRepository.java       operations common to every table
+├── models/                       model management subsystem
+│   └── services/
+│       ├── BaseService.java          validation and error handling shared by services
+│       └── ...                       one service per functional domain
+├── shared/
+│   └── exceptions/               business, not found and data access errors
 └── NexusMarketApplication.java
 ```
+
+| Subsystem          | Folder    | Holds                                                     |
+|--------------------|-----------|-----------------------------------------------------------|
+| Data management    | `data/`   | the entities, the contracts and the JDBC access to them   |
+| Model management   | `models/` | the services that process the data and apply the rules    |
+| Dialog management  | `dialog/` | the entry points that answer a query (not written yet)    |
+
+Entities live in the data subsystem because they describe data, not processing.
+The enums belong there for the same reason: they state which values a datum may
+take.
 
 ## Data access
 
@@ -108,10 +122,21 @@ sits underneath.
 
 ## Pending
 
-The service operations that touch several tables, such as the checkout, are not
-atomic yet: `BaseRepository` opens one connection per operation, so a failure
-halfway through leaves the previous steps applied. Sharing the connection of the
-operation in progress is the step that closes it.
+In the order they need to be built:
+
+1. The database schema. No DDL script exists yet, so there are no tables to
+   query.
+2. The concrete JDBC repositories, one per contract. Until they exist the
+   application compiles but does not start.
+3. The decision models of the DSS, inside `models/indicators/`: inventory
+   restocking, seller performance, catalogue profitability and after sales
+   quality. They read aggregated queries over the transactional tables.
+4. The dialog subsystem, inside `dialog/`, which exposes those indicators.
+
+Separately, the service operations that touch several tables, such as the
+checkout, are not atomic yet: `BaseRepository` opens one connection per
+operation, so a failure halfway through leaves the previous steps applied.
+Sharing the connection of the operation in progress is the step that closes it.
 
 ## Models
 
