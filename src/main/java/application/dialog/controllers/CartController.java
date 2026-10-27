@@ -1,0 +1,61 @@
+package application.dialog.controllers;
+
+import application.data.entities.Cart;
+import application.data.entities.CartItem;
+import application.dialog.requests.CartItemRequest;
+import application.models.services.CartService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/carts")
+public class CartController {
+
+    private final CartService cartService;
+
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    @GetMapping("/{buyerId}")
+    public Cart activeCart(@PathVariable Long buyerId) {
+        return cartService.activeCartFor(buyerId);
+    }
+
+    @GetMapping("/{buyerId}/items")
+    public List<CartItem> items(@PathVariable Long buyerId) {
+        return cartService.items(buyerId);
+    }
+
+    @PostMapping("/{buyerId}/items")
+    public Cart addItem(@PathVariable Long buyerId, @RequestBody CartItemRequest request) {
+        return cartService.addItem(buyerId, request.productId(), request.variantId(), request.quantity());
+    }
+
+    @PutMapping("/{buyerId}/items/{itemId}")
+    public Cart updateItemQuantity(@PathVariable Long buyerId,
+                                   @PathVariable Long itemId,
+                                   @RequestParam int quantity) {
+        return cartService.updateItemQuantity(buyerId, itemId, quantity);
+    }
+
+    @DeleteMapping("/{buyerId}/items/{itemId}")
+    public Cart removeItem(@PathVariable Long buyerId, @PathVariable Long itemId) {
+        return cartService.removeItem(buyerId, itemId);
+    }
+
+    @DeleteMapping("/{buyerId}/items")
+    public Cart clear(@PathVariable Long buyerId) {
+        return cartService.clear(buyerId);
+    }
+}

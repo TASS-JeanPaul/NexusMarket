@@ -38,6 +38,24 @@ docker compose up -d
 mvnw.cmd spring-boot:run
 ```
 
+The API answers on `http://localhost:8080`. Every route under `/api` is open
+while the project is in development, so requests can be sent from a browser or
+from Postman without credentials. Anything outside `/api` still asks for the
+password Spring prints at startup.
+
+## Debug
+
+In VS Code, press F5 and pick `NexusMarket API`: breakpoints inside the
+controllers, the services and the repositories are hit directly.
+
+To attach a debugger to a process started from the command line:
+
+```
+mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+```
+
+and then choose `NexusMarket API (attach on 5005)`.
+
 ## Structure
 
 Each first level folder is one subsystem of the DSS.
@@ -57,6 +75,13 @@ src/main/java/application/
 │   └── services/
 │       ├── BaseService.java          validation and error handling shared by services
 │       └── ...                       one service per functional domain
+├── dialog/                       dialog management subsystem
+│   ├── config/
+│   │   └── SecurityConfiguration.java
+│   ├── requests/                     bodies that are not entities
+│   ├── responses/                    uniform error body
+│   ├── controllers/                  one controller per functional domain
+│   └── ApiExceptionHandler.java      turns exceptions into HTTP codes
 ├── shared/
 │   └── exceptions/               business, not found and data access errors
 └── NexusMarketApplication.java
@@ -66,7 +91,7 @@ src/main/java/application/
 |--------------------|-----------|-----------------------------------------------------------|
 | Data management    | `data/`   | the entities, the contracts and the JDBC access to them   |
 | Model management   | `models/` | the services that process the data and apply the rules    |
-| Dialog management  | `dialog/` | the entry points that answer a query (not written yet)    |
+| Dialog management  | `dialog/` | the REST entry points that answer a request               |
 
 Entities live in the data subsystem because they describe data, not processing.
 The enums belong there for the same reason: they state which values a datum may
@@ -164,14 +189,63 @@ sits underneath.
 | `ResourceNotFoundException` | the requested identifier does not exist |
 | `DataAccessException`       | the database operation failed        |
 
+## API
+
+One controller per functional domain, each one delegating to its service. A
+purchase travels through these requests:
+
+```
+POST /api/users                         register an administrator or an operator
+POST /api/sellers?administratorId=1     register a seller, never self registered
+POST /api/buyers                        register a buyer
+POST /api/buyers/{id}/addresses         add a delivery address
+POST /api/categories                    create a category
+POST /api/products                      publish, with type PHYSICAL or DIGITAL
+POST /api/inventory                     register stock in a warehouse
+POST /api/carts/{buyerId}/items         add to the cart
+POST /api/orders/checkout               turn the cart into an order
+POST /api/orders/{id}/payment           pay, which issues the invoice
+POST /api/shipments                     dispatch
+PUT  /api/shipments/{id}/delivery       deliver, which closes the order
+POST /api/returns                       request a return
+PUT  /api/returns/{id}/reception        receive it, which puts the stock back
+POST /api/refunds                       refund the money
+```
+
+Each domain also answers `GET` requests for its own data.
+
+`Product` is abstract, so Jackson cannot deserialise it. `POST /api/products`
+takes a body carrying a `type` field, and the controller builds the matching
+subclass. It is the only place where the API has to name the type explicitly.
+
+### Errors
+
+A single `@RestControllerAdvice` turns the three exceptions into HTTP codes, so
+no controller holds a `try/catch`:
+
+| Exception                   | Code | Example                                      |
+|-----------------------------|------|----------------------------------------------|
+| `BusinessRuleException`     | 400  | insufficient stock, a seller self registering |
+| `ResourceNotFoundException` | 404  | an identifier that does not exist             |
+| `DataAccessException`       | 500  | the database failed                           |
+
+Every error answers with the same JSON shape, carrying the message the service
+wrote:
+
+```json
+{
+  "status": 400,
+  "error": "BUSINESS_RULE_VIOLATED",
+  "message": "The order 1 is finalized and cannot be modified under any circumstance"
+}
+```
+
 ## Pending
 
-In the order they need to be built:
-
-1. The decision models of the DSS, inside `models/indicators/`: inventory
-   restocking, seller performance, catalogue profitability and after sales
-   quality. They read aggregated queries over the transactional tables.
-2. The dialog subsystem, inside `dialog/`, which exposes those indicators.
+The decision models of the DSS, inside `models/indicators/`: inventory
+restocking, seller performance, catalogue profitability and after sales quality.
+They read aggregated queries over the transactional tables, and the dialog
+subsystem exposes them next to the routes above.
 
 Separately, the service operations that touch several tables, such as the
 checkout, are not atomic yet: `BaseRepository` opens one connection per

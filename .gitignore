@@ -30,6 +30,7 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+.vscode/*
+!.vscode/launch.json
 
 hs_err_pid*.log
