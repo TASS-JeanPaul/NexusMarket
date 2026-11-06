@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IShipmentRepository;
+import application.data.ports.out.IShipmentRepository;
 import application.data.entities.Shipment;
 import application.data.enums.ShipmentStatus;
 

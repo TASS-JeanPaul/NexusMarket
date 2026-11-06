@@ -2,7 +2,7 @@ package application.dialog.controllers;
 
 import application.data.entities.Refund;
 import application.dialog.requests.RefundRequest;
-import application.models.services.RefundService;
+import application.models.ports.in.IRefundUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -24,45 +24,45 @@ import java.util.List;
 @RequestMapping("/api/refunds")
 public class RefundController {
 
-    private final RefundService refundService;
+    private final IRefundUseCase refundUseCase;
 
-    public RefundController(RefundService refundService) {
-        this.refundService = refundService;
+    public RefundController(IRefundUseCase refundUseCase) {
+        this.refundUseCase = refundUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Refund request(@RequestBody RefundRequest request) {
-        return refundService.request(request.returnId(), request.amount(), request.method());
+        return refundUseCase.request(request.returnId(), request.amount(), request.method());
     }
 
     @GetMapping
     public List<Refund> findAll() {
-        return refundService.findAll();
+        return refundUseCase.findAll();
     }
 
     @GetMapping("/{id}")
     public Refund findById(@PathVariable Long id) {
-        return refundService.findById(id);
+        return refundUseCase.findById(id);
     }
 
     @GetMapping("/by-return")
     public Refund findByReturn(@RequestParam Long returnId) {
-        return refundService.findByReturn(returnId);
+        return refundUseCase.findByReturn(returnId);
     }
 
     @PutMapping("/{id}/approval")
     public Refund approve(@PathVariable Long id, @RequestParam Long authorizerId) {
-        return refundService.approve(id, authorizerId);
+        return refundUseCase.approve(id, authorizerId);
     }
 
     @PutMapping("/{id}/rejection")
     public Refund reject(@PathVariable Long id, @RequestParam Long authorizerId) {
-        return refundService.reject(id, authorizerId);
+        return refundUseCase.reject(id, authorizerId);
     }
 
     @PutMapping("/{id}/payment")
     public Refund markAsPaid(@PathVariable Long id) {
-        return refundService.markAsPaid(id);
+        return refundUseCase.markAsPaid(id);
     }
 }

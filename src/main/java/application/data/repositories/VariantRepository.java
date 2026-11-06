@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IVariantRepository;
+import application.data.ports.out.IVariantRepository;
 import application.data.entities.Variant;
 
 import org.springframework.stereotype.Repository;

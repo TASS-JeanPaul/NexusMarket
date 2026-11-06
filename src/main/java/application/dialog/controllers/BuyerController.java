@@ -2,7 +2,7 @@ package application.dialog.controllers;
 
 import application.data.entities.Address;
 import application.data.entities.Buyer;
-import application.models.services.BuyerService;
+import application.models.ports.in.IBuyerUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -24,61 +24,61 @@ import java.util.List;
 @RequestMapping("/api/buyers")
 public class BuyerController {
 
-    private final BuyerService buyerService;
+    private final IBuyerUseCase buyerUseCase;
 
-    public BuyerController(BuyerService buyerService) {
-        this.buyerService = buyerService;
+    public BuyerController(IBuyerUseCase buyerUseCase) {
+        this.buyerUseCase = buyerUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Buyer register(@RequestBody Buyer buyer) {
-        return buyerService.register(buyer);
+        return buyerUseCase.register(buyer);
     }
 
     @GetMapping
     public List<Buyer> findAll() {
-        return buyerService.findAll();
+        return buyerUseCase.findAll();
     }
 
     @GetMapping("/{id}")
     public Buyer findById(@PathVariable Long id) {
-        return buyerService.findById(id);
+        return buyerUseCase.findById(id);
     }
 
     @PutMapping("/{id}/suspension")
     public Buyer suspend(@PathVariable Long id) {
-        return buyerService.suspend(id);
+        return buyerUseCase.suspend(id);
     }
 
     @PutMapping("/{id}/enablement")
     public Buyer enable(@PathVariable Long id) {
-        return buyerService.enable(id);
+        return buyerUseCase.enable(id);
     }
 
     @PostMapping("/{id}/addresses")
     @ResponseStatus(HttpStatus.CREATED)
     public Address addAddress(@PathVariable Long id, @RequestBody Address address) {
-        return buyerService.addAddress(id, address);
+        return buyerUseCase.addAddress(id, address);
     }
 
     @GetMapping("/{id}/addresses")
     public List<Address> listAddresses(@PathVariable Long id) {
-        return buyerService.listAddresses(id);
+        return buyerUseCase.listAddresses(id);
     }
 
     @GetMapping("/{id}/addresses/primary")
     public Address findPrimaryAddress(@PathVariable Long id) {
-        return buyerService.findPrimaryAddress(id);
+        return buyerUseCase.findPrimaryAddress(id);
     }
 
     @PutMapping("/{id}/addresses/{addressId}/primary")
     public Address setPrimaryAddress(@PathVariable Long id, @PathVariable Long addressId) {
-        return buyerService.setPrimaryAddress(id, addressId);
+        return buyerUseCase.setPrimaryAddress(id, addressId);
     }
 
     @DeleteMapping("/{id}/addresses/{addressId}")
     public void removeAddress(@PathVariable Long id, @PathVariable Long addressId) {
-        buyerService.removeAddress(id, addressId);
+        buyerUseCase.removeAddress(id, addressId);
     }
 }

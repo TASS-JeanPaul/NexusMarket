@@ -2,7 +2,7 @@ package application.models.services;
 
 import application.data.enums.Role;
 import application.data.enums.UserStatus;
-import application.data.contracts.IUserRepository;
+import application.data.ports.out.IUserRepository;
 import application.data.entities.User;
 
 import org.springframework.stereotype.Service;

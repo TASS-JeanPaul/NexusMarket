@@ -2,7 +2,7 @@ package application.models.services;
 
 import application.data.enums.InvoiceStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IInvoiceRepository;
+import application.data.ports.out.IInvoiceRepository;
 import application.data.entities.Invoice;
 import application.data.entities.Order;
 

@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IOrderDetailRepository;
+import application.data.ports.out.IOrderDetailRepository;
 import application.data.entities.OrderDetail;
 
 import org.springframework.stereotype.Repository;

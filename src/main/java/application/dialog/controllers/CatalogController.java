@@ -5,7 +5,7 @@ import application.data.entities.Product;
 import application.data.entities.Variant;
 import application.dialog.requests.ProductInformationRequest;
 import application.dialog.requests.ProductRequest;
-import application.models.services.CatalogService;
+import application.models.ports.in.ICatalogUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -29,43 +29,43 @@ import java.util.List;
 @RequestMapping("/api")
 public class CatalogController {
 
-    private final CatalogService catalogService;
+    private final ICatalogUseCase catalogUseCase;
 
-    public CatalogController(CatalogService catalogService) {
-        this.catalogService = catalogService;
+    public CatalogController(ICatalogUseCase catalogUseCase) {
+        this.catalogUseCase = catalogUseCase;
     }
 
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody Category category) {
-        return catalogService.createCategory(category);
+        return catalogUseCase.createCategory(category);
     }
 
     @GetMapping("/categories")
     public List<Category> findAllCategories() {
-        return catalogService.findAllCategories();
+        return catalogUseCase.findAllCategories();
     }
 
     @GetMapping("/categories/{id}")
     public Category findCategoryById(@PathVariable Long id) {
-        return catalogService.findCategoryById(id);
+        return catalogUseCase.findCategoryById(id);
     }
 
     @PutMapping("/categories/{id}")
     public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
         category.setId(id);
-        return catalogService.updateCategory(category);
+        return catalogUseCase.updateCategory(category);
     }
 
     @DeleteMapping("/categories/{id}")
     public void deleteCategory(@PathVariable Long id) {
-        catalogService.deleteCategory(id);
+        catalogUseCase.deleteCategory(id);
     }
 
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public Product publishProduct(@RequestBody ProductRequest request) {
-        return catalogService.publishProduct(request.toProduct());
+        return catalogUseCase.publishProduct(request.toProduct());
     }
 
     @GetMapping("/products")
@@ -73,65 +73,65 @@ public class CatalogController {
                                       @RequestParam(required = false) Long sellerId,
                                       @RequestParam(required = false) Long categoryId) {
         if (sellerId != null) {
-            return catalogService.findProductsBySeller(sellerId);
+            return catalogUseCase.findProductsBySeller(sellerId);
         }
         if (categoryId != null) {
-            return catalogService.findProductsByCategory(categoryId);
+            return catalogUseCase.findProductsByCategory(categoryId);
         }
         return Boolean.TRUE.equals(onlyPublished)
-                ? catalogService.findPublishedProducts()
-                : catalogService.findAllProducts();
+                ? catalogUseCase.findPublishedProducts()
+                : catalogUseCase.findAllProducts();
     }
 
     @GetMapping("/products/{id}")
     public Product findProductById(@PathVariable Long id) {
-        return catalogService.findProductById(id);
+        return catalogUseCase.findProductById(id);
     }
 
     @GetMapping("/products/by-code/{code}")
     public Product findProductByCode(@PathVariable String code) {
-        return catalogService.findProductByCode(code);
+        return catalogUseCase.findProductByCode(code);
     }
 
     @PutMapping("/products/{id}/information")
     public Product updateProductInformation(@PathVariable Long id,
                                             @RequestBody ProductInformationRequest request) {
-        return catalogService.updateProductInformation(id, request.name(), request.description());
+        return catalogUseCase.updateProductInformation(id, request.name(), request.description());
     }
 
     @PutMapping("/products/{id}/price")
     public Product updatePrice(@PathVariable Long id, @RequestParam BigDecimal value) {
-        return catalogService.updatePrice(id, value);
+        return catalogUseCase.updatePrice(id, value);
     }
 
     @PutMapping("/products/{id}/suspension")
     public Product suspendProduct(@PathVariable Long id) {
-        return catalogService.suspendProduct(id);
+        return catalogUseCase.suspendProduct(id);
     }
 
     @PutMapping("/products/{id}/publication")
     public Product republishProduct(@PathVariable Long id) {
-        return catalogService.republishProduct(id);
+        return catalogUseCase.republishProduct(id);
     }
 
     @PutMapping("/products/{id}/discontinuation")
     public Product discontinueProduct(@PathVariable Long id) {
-        return catalogService.discontinueProduct(id);
+        return catalogUseCase.discontinueProduct(id);
     }
 
     @PostMapping("/products/{id}/variants")
     @ResponseStatus(HttpStatus.CREATED)
     public Variant addVariant(@PathVariable Long id, @RequestBody Variant variant) {
-        return catalogService.addVariant(id, variant);
+        return catalogUseCase.addVariant(id, variant);
     }
 
     @GetMapping("/products/{id}/variants")
     public List<Variant> findVariants(@PathVariable Long id) {
-        return catalogService.findVariantsByProduct(id);
+        return catalogUseCase.findVariantsByProduct(id);
     }
 
     @DeleteMapping("/products/{id}/variants/{variantId}")
     public void removeVariant(@PathVariable Long id, @PathVariable Long variantId) {
-        catalogService.removeVariant(id, variantId);
+        catalogUseCase.removeVariant(id, variantId);
     }
 }

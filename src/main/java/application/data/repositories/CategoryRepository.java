@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.ICategoryRepository;
+import application.data.ports.out.ICategoryRepository;
 import application.data.entities.Category;
 
 import org.springframework.stereotype.Repository;

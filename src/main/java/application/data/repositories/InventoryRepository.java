@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IInventoryRepository;
+import application.data.ports.out.IInventoryRepository;
 import application.data.entities.Inventory;
 import application.data.enums.InventoryStatus;
 

@@ -1,7 +1,7 @@
 package application.dialog.controllers;
 
 import application.data.entities.Warehouse;
-import application.models.services.WarehouseService;
+import application.models.ports.in.IWarehouseUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -23,50 +23,50 @@ import java.util.List;
 @RequestMapping("/api/warehouses")
 public class WarehouseController {
 
-    private final WarehouseService warehouseService;
+    private final IWarehouseUseCase warehouseUseCase;
 
-    public WarehouseController(WarehouseService warehouseService) {
-        this.warehouseService = warehouseService;
+    public WarehouseController(IWarehouseUseCase warehouseUseCase) {
+        this.warehouseUseCase = warehouseUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Warehouse create(@RequestBody Warehouse warehouse) {
-        return warehouseService.create(warehouse);
+        return warehouseUseCase.create(warehouse);
     }
 
     @GetMapping
     public List<Warehouse> findAll(@RequestParam(required = false) Boolean onlyActive,
                                    @RequestParam(required = false) Long sellerId) {
         if (sellerId != null) {
-            return warehouseService.findBySeller(sellerId);
+            return warehouseUseCase.findBySeller(sellerId);
         }
-        return Boolean.TRUE.equals(onlyActive) ? warehouseService.findActive() : warehouseService.findAll();
+        return Boolean.TRUE.equals(onlyActive) ? warehouseUseCase.findActive() : warehouseUseCase.findAll();
     }
 
     @GetMapping("/{id}")
     public Warehouse findById(@PathVariable Long id) {
-        return warehouseService.findById(id);
+        return warehouseUseCase.findById(id);
     }
 
     @GetMapping("/by-code/{code}")
     public Warehouse findByCode(@PathVariable String code) {
-        return warehouseService.findByCode(code);
+        return warehouseUseCase.findByCode(code);
     }
 
     @PutMapping("/{id}")
     public Warehouse update(@PathVariable Long id, @RequestBody Warehouse warehouse) {
         warehouse.setId(id);
-        return warehouseService.update(warehouse);
+        return warehouseUseCase.update(warehouse);
     }
 
     @PutMapping("/{id}/activation")
     public Warehouse activate(@PathVariable Long id) {
-        return warehouseService.activate(id);
+        return warehouseUseCase.activate(id);
     }
 
     @PutMapping("/{id}/deactivation")
     public Warehouse deactivate(@PathVariable Long id) {
-        return warehouseService.deactivate(id);
+        return warehouseUseCase.deactivate(id);
     }
 }

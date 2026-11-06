@@ -2,7 +2,7 @@ package application.models.services;
 
 import application.data.enums.WarehouseType;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IWarehouseRepository;
+import application.data.ports.out.IWarehouseRepository;
 import application.data.entities.Warehouse;
 
 import org.springframework.stereotype.Service;

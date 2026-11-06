@@ -4,7 +4,7 @@ import application.data.entities.User;
 import application.data.enums.Role;
 import application.data.enums.UserStatus;
 import application.dialog.requests.ContactInformationRequest;
-import application.models.services.UserService;
+import application.models.ports.in.IUserUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,36 +26,36 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    private final IUserUseCase userUseCase;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(IUserUseCase userUseCase) {
+        this.userUseCase = userUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User register(@RequestBody User user) {
-        return userService.register(user);
+        return userUseCase.register(user);
     }
 
     @GetMapping
     public List<User> findAll(@RequestParam(required = false) Role role) {
-        return role == null ? userService.findAll() : userService.findByRole(role);
+        return role == null ? userUseCase.findAll() : userUseCase.findByRole(role);
     }
 
     @GetMapping("/{id}")
     public User findById(@PathVariable Long id) {
-        return userService.findById(id);
+        return userUseCase.findById(id);
     }
 
     @PutMapping("/{id}/contact-information")
     public User updateContactInformation(@PathVariable Long id,
                                          @RequestBody ContactInformationRequest request) {
-        return userService.updateContactInformation(id, request.email(), request.phone());
+        return userUseCase.updateContactInformation(id, request.email(), request.phone());
     }
 
     @PutMapping("/{id}/status")
     public User changeStatus(@PathVariable Long id, @RequestParam UserStatus value) {
-        return userService.changeStatus(id, value);
+        return userUseCase.changeStatus(id, value);
     }
 }

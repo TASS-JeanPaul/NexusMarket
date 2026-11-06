@@ -2,9 +2,9 @@ package application.models.services;
 
 import application.data.enums.ProductStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.ICategoryRepository;
-import application.data.contracts.IProductRepository;
-import application.data.contracts.IVariantRepository;
+import application.data.ports.out.ICategoryRepository;
+import application.data.ports.out.IProductRepository;
+import application.data.ports.out.IVariantRepository;
 import application.data.entities.Category;
 import application.data.entities.Product;
 import application.data.entities.Variant;

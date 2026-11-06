@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IAddressRepository;
+import application.data.ports.out.IAddressRepository;
 import application.data.entities.Address;
 
 import org.springframework.stereotype.Repository;

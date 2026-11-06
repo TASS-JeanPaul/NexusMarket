@@ -1,7 +1,7 @@
 package application.models.services;
 
-import application.data.contracts.ICartItemRepository;
-import application.data.contracts.ICartRepository;
+import application.data.ports.out.ICartItemRepository;
+import application.data.ports.out.ICartRepository;
 import application.data.entities.Cart;
 import application.data.entities.CartItem;
 

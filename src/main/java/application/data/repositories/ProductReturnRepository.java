@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IProductReturnRepository;
+import application.data.ports.out.IProductReturnRepository;
 import application.data.entities.ProductReturn;
 import application.data.enums.ReturnStatus;
 

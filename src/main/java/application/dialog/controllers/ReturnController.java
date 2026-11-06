@@ -4,7 +4,7 @@ import application.data.entities.ProductReturn;
 import application.data.entities.ProductReturnDetail;
 import application.dialog.requests.ReturnRequest;
 import application.dialog.requests.WarehouseOperationRequest;
-import application.models.services.ReturnService;
+import application.models.ports.in.IReturnUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -27,16 +27,16 @@ import java.util.List;
 @RequestMapping("/api/returns")
 public class ReturnController {
 
-    private final ReturnService returnService;
+    private final IReturnUseCase returnUseCase;
 
-    public ReturnController(ReturnService returnService) {
-        this.returnService = returnService;
+    public ReturnController(IReturnUseCase returnUseCase) {
+        this.returnUseCase = returnUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductReturn request(@RequestBody ReturnRequest request) {
-        return returnService.request(
+        return returnUseCase.request(
                 request.buyerId(),
                 request.orderId(),
                 request.reason(),
@@ -47,48 +47,48 @@ public class ReturnController {
     public List<ProductReturn> find(@RequestParam(required = false) Long orderId,
                                     @RequestParam(required = false) Long buyerId) {
         if (orderId != null) {
-            return returnService.findByOrder(orderId);
+            return returnUseCase.findByOrder(orderId);
         }
-        return buyerId == null ? returnService.findAll() : returnService.findByBuyer(buyerId);
+        return buyerId == null ? returnUseCase.findAll() : returnUseCase.findByBuyer(buyerId);
     }
 
     @GetMapping("/{id}")
     public ProductReturn findById(@PathVariable Long id) {
-        return returnService.findByIdWithDetails(id);
+        return returnUseCase.findByIdWithDetails(id);
     }
 
     @GetMapping("/by-number/{returnNumber}")
     public ProductReturn findByNumber(@PathVariable String returnNumber) {
-        return returnService.findByNumber(returnNumber);
+        return returnUseCase.findByNumber(returnNumber);
     }
 
     @GetMapping("/{id}/details")
     public List<ProductReturnDetail> details(@PathVariable Long id) {
-        return returnService.details(id);
+        return returnUseCase.details(id);
     }
 
     @GetMapping("/{id}/returned-value")
     public BigDecimal returnedValue(@PathVariable Long id) {
-        return returnService.returnedValue(id);
+        return returnUseCase.returnedValue(id);
     }
 
     @PutMapping("/{id}/approval")
     public ProductReturn approve(@PathVariable Long id, @RequestParam Long reviewerId) {
-        return returnService.approve(id, reviewerId);
+        return returnUseCase.approve(id, reviewerId);
     }
 
     @PutMapping("/{id}/rejection")
     public ProductReturn reject(@PathVariable Long id, @RequestParam Long reviewerId) {
-        return returnService.reject(id, reviewerId);
+        return returnUseCase.reject(id, reviewerId);
     }
 
     @PutMapping("/{id}/reception")
     public ProductReturn receive(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
-        return returnService.receive(id, request.warehouseId(), request.userId());
+        return returnUseCase.receive(id, request.warehouseId(), request.userId());
     }
 
     @PutMapping("/{id}/completion")
     public ProductReturn complete(@PathVariable Long id) {
-        return returnService.complete(id);
+        return returnUseCase.complete(id);
     }
 }

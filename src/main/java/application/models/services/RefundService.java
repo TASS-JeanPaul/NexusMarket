@@ -4,7 +4,7 @@ import application.data.enums.RefundMethod;
 import application.data.enums.RefundStatus;
 import application.data.enums.Role;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IRefundRepository;
+import application.data.ports.out.IRefundRepository;
 import application.data.entities.Refund;
 
 import org.springframework.stereotype.Service;

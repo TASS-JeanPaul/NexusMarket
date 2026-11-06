@@ -5,7 +5,7 @@ import application.data.entities.OrderDetail;
 import application.data.enums.OrderStatus;
 import application.dialog.requests.CheckoutRequest;
 import application.dialog.requests.WarehouseOperationRequest;
-import application.models.services.OrderService;
+import application.models.ports.in.IOrderUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,54 +26,54 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final IOrderUseCase orderUseCase;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(IOrderUseCase orderUseCase) {
+        this.orderUseCase = orderUseCase;
     }
 
     @PostMapping("/checkout")
     @ResponseStatus(HttpStatus.CREATED)
     public Order checkout(@RequestBody CheckoutRequest request) {
-        return orderService.checkout(request.buyerId(), request.deliveryAddressId(), request.warehouseId());
+        return orderUseCase.checkout(request.buyerId(), request.deliveryAddressId(), request.warehouseId());
     }
 
     @GetMapping
     public List<Order> find(@RequestParam(required = false) Long buyerId,
                             @RequestParam(required = false) OrderStatus status) {
         if (buyerId != null) {
-            return orderService.findByBuyer(buyerId);
+            return orderUseCase.findByBuyer(buyerId);
         }
-        return status == null ? orderService.findAll() : orderService.findByStatus(status);
+        return status == null ? orderUseCase.findAll() : orderUseCase.findByStatus(status);
     }
 
     @GetMapping("/{id}")
     public Order findById(@PathVariable Long id) {
-        return orderService.findByIdWithDetails(id);
+        return orderUseCase.findByIdWithDetails(id);
     }
 
     @GetMapping("/by-number/{orderNumber}")
     public Order findByNumber(@PathVariable String orderNumber) {
-        return orderService.findByNumber(orderNumber);
+        return orderUseCase.findByNumber(orderNumber);
     }
 
     @GetMapping("/{id}/details")
     public List<OrderDetail> details(@PathVariable Long id) {
-        return orderService.details(id);
+        return orderUseCase.details(id);
     }
 
     @PostMapping("/{id}/payment")
     public Order markAsPaid(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
-        return orderService.markAsPaid(id, request.warehouseId(), request.userId());
+        return orderUseCase.markAsPaid(id, request.warehouseId(), request.userId());
     }
 
     @PostMapping("/{id}/cancellation")
     public Order cancel(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
-        return orderService.cancel(id, request.warehouseId(), request.userId());
+        return orderUseCase.cancel(id, request.warehouseId(), request.userId());
     }
 
     @PostMapping("/{id}/completion")
     public Order complete(@PathVariable Long id) {
-        return orderService.complete(id);
+        return orderUseCase.complete(id);
     }
 }

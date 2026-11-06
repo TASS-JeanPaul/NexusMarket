@@ -1,7 +1,7 @@
 package application.dialog.controllers;
 
 import application.data.entities.Invoice;
-import application.models.services.InvoiceService;
+import application.models.ports.in.IInvoiceUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -19,39 +19,39 @@ import java.util.List;
 @RequestMapping("/api/invoices")
 public class InvoiceController {
 
-    private final InvoiceService invoiceService;
+    private final IInvoiceUseCase invoiceUseCase;
 
-    public InvoiceController(InvoiceService invoiceService) {
-        this.invoiceService = invoiceService;
+    public InvoiceController(IInvoiceUseCase invoiceUseCase) {
+        this.invoiceUseCase = invoiceUseCase;
     }
 
     @GetMapping
     public List<Invoice> findAll() {
-        return invoiceService.findAll();
+        return invoiceUseCase.findAll();
     }
 
     @GetMapping("/{id}")
     public Invoice findById(@PathVariable Long id) {
-        return invoiceService.findById(id);
+        return invoiceUseCase.findById(id);
     }
 
     @GetMapping("/by-order")
     public Invoice findByOrder(@RequestParam Long orderId) {
-        return invoiceService.findByOrder(orderId);
+        return invoiceUseCase.findByOrder(orderId);
     }
 
     @GetMapping("/by-number/{invoiceNumber}")
     public Invoice findByNumber(@PathVariable String invoiceNumber) {
-        return invoiceService.findByNumber(invoiceNumber);
+        return invoiceUseCase.findByNumber(invoiceNumber);
     }
 
     @PutMapping("/{id}/payment")
     public Invoice markAsPaid(@PathVariable Long id) {
-        return invoiceService.markAsPaid(id);
+        return invoiceUseCase.markAsPaid(id);
     }
 
     @PutMapping("/{id}/annulment")
     public Invoice annul(@PathVariable Long id) {
-        return invoiceService.annul(id);
+        return invoiceUseCase.annul(id);
     }
 }

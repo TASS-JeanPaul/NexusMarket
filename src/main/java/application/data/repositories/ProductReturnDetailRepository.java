@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IProductReturnDetailRepository;
+import application.data.ports.out.IProductReturnDetailRepository;
 import application.data.entities.ProductReturnDetail;
 
 import org.springframework.stereotype.Repository;

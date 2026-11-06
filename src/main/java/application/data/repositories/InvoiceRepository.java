@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IInvoiceRepository;
+import application.data.ports.out.IInvoiceRepository;
 import application.data.entities.Invoice;
 import application.data.enums.InvoiceStatus;
 

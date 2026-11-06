@@ -2,8 +2,8 @@ package application.models.services;
 
 import application.data.enums.OrderStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IOrderDetailRepository;
-import application.data.contracts.IOrderRepository;
+import application.data.ports.out.IOrderDetailRepository;
+import application.data.ports.out.IOrderRepository;
 import application.data.entities.Cart;
 import application.data.entities.CartItem;
 import application.data.entities.Order;

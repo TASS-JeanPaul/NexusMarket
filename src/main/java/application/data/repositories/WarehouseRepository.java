@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IWarehouseRepository;
+import application.data.ports.out.IWarehouseRepository;
 import application.data.entities.Warehouse;
 import application.data.enums.WarehouseType;
 

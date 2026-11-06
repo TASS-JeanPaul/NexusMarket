@@ -2,7 +2,7 @@ package application.dialog.controllers;
 
 import application.data.entities.Seller;
 import application.dialog.requests.BusinessInformationRequest;
-import application.models.services.SellerService;
+import application.models.ports.in.ISellerUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -24,46 +24,46 @@ import java.util.List;
 @RequestMapping("/api/sellers")
 public class SellerController {
 
-    private final SellerService sellerService;
+    private final ISellerUseCase sellerUseCase;
 
-    public SellerController(SellerService sellerService) {
-        this.sellerService = sellerService;
+    public SellerController(ISellerUseCase sellerUseCase) {
+        this.sellerUseCase = sellerUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Seller register(@RequestBody Seller seller, @RequestParam Long administratorId) {
-        return sellerService.register(seller, administratorId);
+        return sellerUseCase.register(seller, administratorId);
     }
 
     @GetMapping
     public List<Seller> findAll() {
-        return sellerService.findAll();
+        return sellerUseCase.findAll();
     }
 
     @GetMapping("/{id}")
     public Seller findById(@PathVariable Long id) {
-        return sellerService.findById(id);
+        return sellerUseCase.findById(id);
     }
 
     @GetMapping("/by-tax-id/{taxId}")
     public Seller findByTaxId(@PathVariable String taxId) {
-        return sellerService.findByTaxId(taxId);
+        return sellerUseCase.findByTaxId(taxId);
     }
 
     @PutMapping("/{id}/business-information")
     public Seller updateBusinessInformation(@PathVariable Long id,
                                             @RequestBody BusinessInformationRequest request) {
-        return sellerService.updateBusinessInformation(id, request.businessName(), request.phone());
+        return sellerUseCase.updateBusinessInformation(id, request.businessName(), request.phone());
     }
 
     @PutMapping("/{id}/block")
     public Seller block(@PathVariable Long id) {
-        return sellerService.block(id);
+        return sellerUseCase.block(id);
     }
 
     @PutMapping("/{id}/activation")
     public Seller activate(@PathVariable Long id) {
-        return sellerService.activate(id);
+        return sellerUseCase.activate(id);
     }
 }

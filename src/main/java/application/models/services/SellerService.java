@@ -3,7 +3,7 @@ package application.models.services;
 import application.data.enums.Role;
 import application.data.enums.UserStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.ISellerRepository;
+import application.data.ports.out.ISellerRepository;
 import application.data.entities.Seller;
 
 import org.springframework.stereotype.Service;

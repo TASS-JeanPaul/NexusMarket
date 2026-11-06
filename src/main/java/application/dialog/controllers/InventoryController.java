@@ -5,7 +5,7 @@ import application.data.entities.InventoryMovement;
 import application.dialog.requests.InventoryAdjustmentRequest;
 import application.dialog.requests.InventoryOperationRequest;
 import application.dialog.requests.InventoryRegistrationRequest;
-import application.models.services.InventoryService;
+import application.models.ports.in.IInventoryUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,16 +26,16 @@ import java.util.List;
 @RequestMapping("/api/inventory")
 public class InventoryController {
 
-    private final InventoryService inventoryService;
+    private final IInventoryUseCase inventoryUseCase;
 
-    public InventoryController(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
+    public InventoryController(IInventoryUseCase inventoryUseCase) {
+        this.inventoryUseCase = inventoryUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Inventory register(@RequestBody InventoryRegistrationRequest request) {
-        return inventoryService.register(
+        return inventoryUseCase.register(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -47,24 +47,24 @@ public class InventoryController {
     public List<Inventory> find(@RequestParam(required = false) Long productId,
                                 @RequestParam(required = false) Long warehouseId) {
         if (productId != null) {
-            return inventoryService.findByProduct(productId);
+            return inventoryUseCase.findByProduct(productId);
         }
-        return inventoryService.findByWarehouse(warehouseId);
+        return inventoryUseCase.findByWarehouse(warehouseId);
     }
 
     @GetMapping("/{id}")
     public Inventory findById(@PathVariable Long id) {
-        return inventoryService.findById(id);
+        return inventoryUseCase.findById(id);
     }
 
     @GetMapping("/{id}/movements")
     public List<InventoryMovement> movementHistory(@PathVariable Long id) {
-        return inventoryService.movementHistory(id);
+        return inventoryUseCase.movementHistory(id);
     }
 
     @PostMapping("/restocks")
     public Inventory restock(@RequestBody InventoryOperationRequest request) {
-        return inventoryService.restock(
+        return inventoryUseCase.restock(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -74,7 +74,7 @@ public class InventoryController {
 
     @PostMapping("/reservations")
     public Inventory reserve(@RequestBody InventoryOperationRequest request) {
-        return inventoryService.reserve(
+        return inventoryUseCase.reserve(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -84,7 +84,7 @@ public class InventoryController {
 
     @PostMapping("/releases")
     public Inventory release(@RequestBody InventoryOperationRequest request) {
-        return inventoryService.release(
+        return inventoryUseCase.release(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -94,7 +94,7 @@ public class InventoryController {
 
     @PostMapping("/returns")
     public Inventory returnToStock(@RequestBody InventoryOperationRequest request) {
-        return inventoryService.returnToStock(
+        return inventoryUseCase.returnToStock(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -104,7 +104,7 @@ public class InventoryController {
 
     @PostMapping("/damages")
     public Inventory markAsDamaged(@RequestBody InventoryOperationRequest request) {
-        return inventoryService.markAsDamaged(
+        return inventoryUseCase.markAsDamaged(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),
@@ -114,7 +114,7 @@ public class InventoryController {
 
     @PostMapping("/adjustments")
     public Inventory adjust(@RequestBody InventoryAdjustmentRequest request) {
-        return inventoryService.adjust(
+        return inventoryUseCase.adjust(
                 request.productId(),
                 request.variantId(),
                 request.warehouseId(),

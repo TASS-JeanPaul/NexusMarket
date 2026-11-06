@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IOrderRepository;
+import application.data.ports.out.IOrderRepository;
 import application.data.entities.Order;
 import application.data.enums.OrderStatus;
 

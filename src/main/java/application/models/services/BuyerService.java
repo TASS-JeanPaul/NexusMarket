@@ -3,8 +3,8 @@ package application.models.services;
 import application.data.enums.CommercialStatus;
 import application.data.enums.UserStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IAddressRepository;
-import application.data.contracts.IBuyerRepository;
+import application.data.ports.out.IAddressRepository;
+import application.data.ports.out.IBuyerRepository;
 import application.data.entities.Address;
 import application.data.entities.Buyer;
 

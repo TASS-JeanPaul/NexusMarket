@@ -3,7 +3,7 @@ package application.dialog.controllers;
 import application.data.entities.Shipment;
 import application.data.enums.ShipmentStatus;
 import application.dialog.requests.ShipmentRequest;
-import application.models.services.ShipmentService;
+import application.models.ports.in.IShipmentUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -25,16 +25,16 @@ import java.util.List;
 @RequestMapping("/api/shipments")
 public class ShipmentController {
 
-    private final ShipmentService shipmentService;
+    private final IShipmentUseCase shipmentUseCase;
 
-    public ShipmentController(ShipmentService shipmentService) {
-        this.shipmentService = shipmentService;
+    public ShipmentController(IShipmentUseCase shipmentUseCase) {
+        this.shipmentUseCase = shipmentUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Shipment createFor(@RequestBody ShipmentRequest request) {
-        return shipmentService.createFor(
+        return shipmentUseCase.createFor(
                 request.orderId(),
                 request.sourceWarehouseId(),
                 request.logisticsOperatorId(),
@@ -44,51 +44,51 @@ public class ShipmentController {
 
     @GetMapping
     public List<Shipment> find(@RequestParam(required = false) ShipmentStatus status) {
-        return status == null ? shipmentService.findAll() : shipmentService.findByStatus(status);
+        return status == null ? shipmentUseCase.findAll() : shipmentUseCase.findByStatus(status);
     }
 
     @GetMapping("/{id}")
     public Shipment findById(@PathVariable Long id) {
-        return shipmentService.findById(id);
+        return shipmentUseCase.findById(id);
     }
 
     @GetMapping("/by-order")
     public Shipment findByOrder(@RequestParam Long orderId) {
-        return shipmentService.findByOrder(orderId);
+        return shipmentUseCase.findByOrder(orderId);
     }
 
     @GetMapping("/by-tracking/{trackingNumber}")
     public Shipment findByTrackingNumber(@PathVariable String trackingNumber) {
-        return shipmentService.findByTrackingNumber(trackingNumber);
+        return shipmentUseCase.findByTrackingNumber(trackingNumber);
     }
 
     @PutMapping("/{id}/preparation")
     public Shipment markInPreparation(@PathVariable Long id) {
-        return shipmentService.markInPreparation(id);
+        return shipmentUseCase.markInPreparation(id);
     }
 
     @PutMapping("/{id}/dispatch")
     public Shipment markAsShipped(@PathVariable Long id) {
-        return shipmentService.markAsShipped(id);
+        return shipmentUseCase.markAsShipped(id);
     }
 
     @PutMapping("/{id}/transit")
     public Shipment markInTransit(@PathVariable Long id) {
-        return shipmentService.markInTransit(id);
+        return shipmentUseCase.markInTransit(id);
     }
 
     @PutMapping("/{id}/delivery")
     public Shipment markAsDelivered(@PathVariable Long id) {
-        return shipmentService.markAsDelivered(id);
+        return shipmentUseCase.markAsDelivered(id);
     }
 
     @PutMapping("/{id}/failure")
     public Shipment markAsFailed(@PathVariable Long id) {
-        return shipmentService.markAsFailed(id);
+        return shipmentUseCase.markAsFailed(id);
     }
 
     @PutMapping("/{id}/operator")
     public Shipment reassignOperator(@PathVariable Long id, @RequestParam Long logisticsOperatorId) {
-        return shipmentService.reassignOperator(id, logisticsOperatorId);
+        return shipmentUseCase.reassignOperator(id, logisticsOperatorId);
     }
 }

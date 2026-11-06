@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IProductRepository;
+import application.data.ports.out.IProductRepository;
 import application.data.entities.DigitalProduct;
 import application.data.entities.PhysicalProduct;
 import application.data.entities.Product;

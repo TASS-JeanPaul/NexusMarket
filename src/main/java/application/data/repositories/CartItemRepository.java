@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.ICartItemRepository;
+import application.data.ports.out.ICartItemRepository;
 import application.data.entities.CartItem;
 
 import org.springframework.stereotype.Repository;

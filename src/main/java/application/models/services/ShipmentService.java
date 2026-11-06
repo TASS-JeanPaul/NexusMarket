@@ -4,7 +4,7 @@ import application.data.enums.OrderStatus;
 import application.data.enums.Role;
 import application.data.enums.ShipmentStatus;
 import application.shared.exceptions.ResourceNotFoundException;
-import application.data.contracts.IShipmentRepository;
+import application.data.ports.out.IShipmentRepository;
 import application.data.entities.Order;
 import application.data.entities.OrderDetail;
 import application.data.entities.Product;

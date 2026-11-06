@@ -1,7 +1,7 @@
 package application.data.repositories;
 
 import application.data.config.TransactionManager;
-import application.data.contracts.IRepository;
+import application.data.ports.out.IRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

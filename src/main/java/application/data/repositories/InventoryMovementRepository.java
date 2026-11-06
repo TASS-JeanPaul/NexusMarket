@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.IInventoryMovementRepository;
+import application.data.ports.out.IInventoryMovementRepository;
 import application.data.entities.InventoryMovement;
 import application.data.enums.MovementType;
 

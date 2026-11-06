@@ -1,6 +1,6 @@
 package application.data.repositories;
 
-import application.data.contracts.ISellerRepository;
+import application.data.ports.out.ISellerRepository;
 import application.data.entities.Seller;
 import application.data.enums.UserStatus;
 
