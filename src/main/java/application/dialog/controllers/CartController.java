@@ -5,6 +5,8 @@ import application.data.entities.CartItem;
 import application.dialog.requests.CartItemRequest;
 import application.models.services.CartService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "07 Carrito", description = "Seleccion provisional de productos antes de comprometerse")
 @RestController
 @RequestMapping("/api/carts")
 public class CartController {

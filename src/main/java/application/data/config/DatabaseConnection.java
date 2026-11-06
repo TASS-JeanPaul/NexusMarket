@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseConnection {
+    private static final int VALIDATION_TIMEOUT_SECONDS = 2;
+
     private static DatabaseConnection instance;
 
     private final String url;
@@ -42,5 +44,13 @@ public class DatabaseConnection {
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
+    }
+
+    public boolean isReachable() {
+        try (Connection connection = getConnection()) {
+            return connection.isValid(VALIDATION_TIMEOUT_SECONDS);
+        } catch (SQLException exception) {
+            return false;
+        }
     }
 }

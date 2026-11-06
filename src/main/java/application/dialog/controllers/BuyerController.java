@@ -4,6 +4,8 @@ import application.data.entities.Address;
 import application.data.entities.Buyer;
 import application.models.services.BuyerService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "02 Compradores", description = "Compradores, su estado comercial y sus direcciones de entrega")
 @RestController
 @RequestMapping("/api/buyers")
 public class BuyerController {

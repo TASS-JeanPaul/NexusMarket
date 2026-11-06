@@ -6,6 +6,8 @@ import application.dialog.requests.ReturnRequest;
 import application.dialog.requests.WarehouseOperationRequest;
 import application.models.services.ReturnService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Tag(name = "11 Devoluciones", description = "Solicitud, revision y recepcion de mercancia devuelta")
 @RestController
 @RequestMapping("/api/returns")
 public class ReturnController {

@@ -3,6 +3,8 @@ package application.dialog.controllers;
 import application.data.entities.Invoice;
 import application.models.services.InvoiceService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "09 Facturas", description = "Facturacion de las compras, con numeracion propia")
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoiceController {

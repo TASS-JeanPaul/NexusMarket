@@ -7,6 +7,8 @@ import application.dialog.requests.ProductInformationRequest;
 import application.dialog.requests.ProductRequest;
 import application.models.services.CatalogService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Tag(name = "05 Catalogo", description = "Categorias, productos fisicos y digitales, y variantes")
 @RestController
 @RequestMapping("/api")
 public class CatalogController {

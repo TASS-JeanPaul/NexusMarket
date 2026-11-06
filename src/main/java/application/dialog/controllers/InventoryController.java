@@ -7,6 +7,8 @@ import application.dialog.requests.InventoryOperationRequest;
 import application.dialog.requests.InventoryRegistrationRequest;
 import application.models.services.InventoryService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "06 Inventario", description = "Existencias por producto y bodega, con trazabilidad de cada movimiento")
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {

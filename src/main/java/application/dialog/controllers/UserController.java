@@ -6,6 +6,8 @@ import application.data.enums.UserStatus;
 import application.dialog.requests.ContactInformationRequest;
 import application.models.services.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "01 Usuarios", description = "Identificacion y estado operativo de los usuarios")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

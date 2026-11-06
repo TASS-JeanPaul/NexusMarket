@@ -4,6 +4,8 @@ import application.data.entities.Refund;
 import application.dialog.requests.RefundRequest;
 import application.models.services.RefundService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "12 Reembolsos", description = "Devolucion del dinero, posterior a la devolucion de la mercancia")
 @RestController
 @RequestMapping("/api/refunds")
 public class RefundController {

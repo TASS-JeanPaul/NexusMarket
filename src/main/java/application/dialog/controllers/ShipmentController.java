@@ -5,6 +5,8 @@ import application.data.enums.ShipmentStatus;
 import application.dialog.requests.ShipmentRequest;
 import application.models.services.ShipmentService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "10 Envios", description = "Traslado fisico de los pedidos que requieren despacho")
 @RestController
 @RequestMapping("/api/shipments")
 public class ShipmentController {

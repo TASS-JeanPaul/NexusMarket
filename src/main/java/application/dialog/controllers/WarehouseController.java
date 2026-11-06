@@ -3,6 +3,8 @@ package application.dialog.controllers;
 import application.data.entities.Warehouse;
 import application.models.services.WarehouseService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "04 Bodegas", description = "Espacios fisicos de almacenamiento del marketplace y de los vendedores")
 @RestController
 @RequestMapping("/api/warehouses")
 public class WarehouseController {
