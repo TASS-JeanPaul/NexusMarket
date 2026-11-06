@@ -29,7 +29,7 @@ public class BuyerService extends BaseService {
     }
 
     public Buyer register(Buyer buyer) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             require(buyer != null, "The buyer is required");
             requireText(buyer.getFullName(), "The full name");
             requireText(buyer.getIdentityDocument(), "The identity document");
@@ -71,7 +71,7 @@ public class BuyerService extends BaseService {
     }
 
     public Address addAddress(Long buyerId, Address address) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             findById(buyerId);
             require(address != null, "The address is required");
             requireText(address.getStreet(), "The street");
@@ -102,7 +102,7 @@ public class BuyerService extends BaseService {
     }
 
     public Address setPrimaryAddress(Long buyerId, Long addressId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Address address = findAddressOfBuyer(buyerId, addressId);
             clearPrimaryFlag(addressRepository.findByBuyerId(buyerId));
 

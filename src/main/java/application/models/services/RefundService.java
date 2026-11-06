@@ -78,7 +78,7 @@ public class RefundService extends BaseService {
     }
 
     public Refund approve(Long refundId, Long authorizerId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             userService.requireRole(authorizerId, Role.ADMINISTRATOR);
             Refund refund = transition(refundId, RefundStatus.APPROVED);
 
@@ -89,7 +89,7 @@ public class RefundService extends BaseService {
     }
 
     public Refund reject(Long refundId, Long authorizerId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             userService.requireRole(authorizerId, Role.ADMINISTRATOR);
             Refund refund = transition(refundId, RefundStatus.REJECTED);
 
@@ -100,7 +100,7 @@ public class RefundService extends BaseService {
     }
 
     public Refund markAsPaid(Long refundId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Refund refund = transition(refundId, RefundStatus.PAID);
 
             refund.setPaidAt(LocalDateTime.now());

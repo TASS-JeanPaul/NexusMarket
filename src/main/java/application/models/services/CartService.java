@@ -50,7 +50,7 @@ public class CartService extends BaseService {
     }
 
     public Cart addItem(Long buyerId, Long productId, Long variantId, int quantity) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity");
             catalogService.requirePublished(productId);
 
@@ -82,7 +82,7 @@ public class CartService extends BaseService {
     }
 
     public Cart updateItemQuantity(Long buyerId, Long itemId, int quantity) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity");
 
             Cart cart = activeCartFor(buyerId);
@@ -97,7 +97,7 @@ public class CartService extends BaseService {
     }
 
     public Cart removeItem(Long buyerId, Long itemId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Cart cart = activeCartFor(buyerId);
             findItemOfCart(cart, itemId);
             cartItemRepository.delete(itemId);
@@ -107,7 +107,7 @@ public class CartService extends BaseService {
     }
 
     public Cart clear(Long buyerId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Cart cart = activeCartFor(buyerId);
             cartItemRepository.deleteByCartId(cart.getId());
 

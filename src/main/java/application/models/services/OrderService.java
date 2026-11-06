@@ -57,7 +57,7 @@ public class OrderService extends BaseService {
     }
 
     public Order checkout(Long buyerId, Long deliveryAddressId, Long warehouseId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             buyerService.requirePurchaseEnabled(buyerId);
             Cart cart = cartService.requireNotEmpty(buyerId);
 
@@ -155,7 +155,7 @@ public class OrderService extends BaseService {
     }
 
     public Order markAsPaid(Long orderId, Long warehouseId, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Order order = findByIdWithDetails(orderId);
             requireTransition(order, OrderStatus.PAID);
 
@@ -201,7 +201,7 @@ public class OrderService extends BaseService {
     }
 
     public Order cancel(Long orderId, Long warehouseId, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Order order = findByIdWithDetails(orderId);
             requireTransition(order, OrderStatus.CANCELLED);
 

@@ -57,7 +57,7 @@ public class ReturnService extends BaseService {
     }
 
     public ProductReturn request(Long buyerId, Long orderId, String reason, List<ProductReturnDetail> lines) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             Order order = orderService.requireReturnable(orderId);
             require(order.getBuyerId().equals(buyerId),
                     "The order " + orderId + " does not belong to the buyer " + buyerId);
@@ -128,7 +128,7 @@ public class ReturnService extends BaseService {
     }
 
     public ProductReturn approve(Long returnId, Long reviewerId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requireReviewer(reviewerId);
             ProductReturn productReturn = transition(returnId, ReturnStatus.APPROVED);
 
@@ -139,7 +139,7 @@ public class ReturnService extends BaseService {
     }
 
     public ProductReturn reject(Long returnId, Long reviewerId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requireReviewer(reviewerId);
             ProductReturn productReturn = transition(returnId, ReturnStatus.REJECTED);
 
@@ -151,7 +151,7 @@ public class ReturnService extends BaseService {
     }
 
     public ProductReturn receive(Long returnId, Long warehouseId, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             ProductReturn productReturn = transition(returnId, ReturnStatus.RECEIVED);
 
             for (ProductReturnDetail line : returnDetailRepository.findByReturnId(returnId)) {
@@ -169,7 +169,7 @@ public class ReturnService extends BaseService {
     }
 
     public ProductReturn complete(Long returnId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             ProductReturn productReturn = transition(returnId, ReturnStatus.COMPLETED);
 
             productReturn.setClosedAt(LocalDateTime.now());

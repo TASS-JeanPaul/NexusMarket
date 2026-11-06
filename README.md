@@ -10,6 +10,10 @@ of: data management, model management and dialog management.
 
 Maven does not need to be installed: the project ships the wrapper (`mvnw.cmd`).
 
+The commands below are written for PowerShell, which does not look for programs
+in the current folder, so the wrapper is always called as `.\mvnw.cmd`. The same
+spelling works in `cmd.exe`.
+
 ## Database
 
 The project ships its own PostgreSQL in Docker, on port 5433 so it does not
@@ -35,13 +39,50 @@ docker compose up -d
 
 ```
 docker compose up -d
-mvnw.cmd spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 
 The API answers on `http://localhost:8080`. Every route under `/api` is open
 while the project is in development, so requests can be sent from a browser or
 from Postman without credentials. Anything outside `/api` still asks for the
 password Spring prints at startup.
+
+To check that it is alive:
+
+```
+curl http://localhost:8080/api/health
+```
+
+```json
+{ "api": "UP", "database": "UP", "checkedAt": "2026-10-27T18:46:06" }
+```
+
+It answers 200 when both answer, and 503 with `"database": "DOWN"` when the API
+is up but cannot reach PostgreSQL. The check opens a real connection instead of
+reporting the state of a pool, so it cannot claim the database is healthy while
+the container is stopped.
+
+## Swagger
+
+Once the API is running, the whole surface is browsable and executable at:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+The sections are numbered in the order of the business flow, from `00 Salud` to
+`12 Reembolsos`, so the page can be read top to bottom: register the
+participants, publish the catalogue, load stock, fill the cart, check out, pay,
+dispatch, and return. Every operation has a `Try it out` button, and fields such
+as the product `type` or an order `status` are offered as a list of the values
+the enum allows, so a request can be sent without typing anything by hand.
+
+The raw contract lives at `/v3/api-docs`.
+
+Swagger is the fastest way to explore and to run one call. What it cannot do is
+carry an identifier from one call into the next, so a whole purchase still has
+to be walked by hand. `NexusMarket.postman_collection.json` does that part: it
+runs the full flow in order and chains every identifier on its own.
 
 ## Debug
 
@@ -51,7 +92,7 @@ controllers, the services and the repositories are hit directly.
 To attach a debugger to a process started from the command line:
 
 ```
-mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 ```
 
 and then choose `NexusMarket API (attach on 5005)`.
@@ -195,6 +236,7 @@ One controller per functional domain, each one delegating to its service. A
 purchase travels through these requests:
 
 ```
+GET  /api/health                        is the API alive, and can it reach the database
 POST /api/users                         register an administrator or an operator
 POST /api/sellers?administratorId=1     register a seller, never self registered
 POST /api/buyers                        register a buyer
@@ -247,12 +289,31 @@ restocking, seller performance, catalogue profitability and after sales quality.
 They read aggregated queries over the transactional tables, and the dialog
 subsystem exposes them next to the routes above.
 
-Separately, the service operations that touch several tables, such as the
-checkout, are not atomic yet: `BaseRepository` opens one connection per
-operation, so a failure halfway through leaves the previous steps applied.
-Sharing the connection of the operation in progress is the step that closes it.
-The same gap affects saving a buyer or a seller, which writes two rows: if the
-second insert fails, the first one stays.
+## Transactions
+
+A business operation that writes more than one row runs inside a single
+database transaction, so it either happens whole or not at all.
+
+`TransactionManager` keeps the connection of the operation in progress in a
+`ThreadLocal`. `BaseRepository` asks it for a connection instead of opening one
+of its own: inside a transaction every repository call reuses the same
+connection and none of them closes it, and outside a transaction each call still
+gets a fresh connection that it closes when it is done.
+
+Nested calls join the transaction already in progress rather than starting
+another one. This matters because the checkout reserves stock through
+`InventoryService`, which is transactional on its own: only the outermost
+operation commits, so a reservation cannot be committed before the order that
+justifies it exists.
+
+The 27 operations that write several rows use it, among them the checkout, the
+payment, the cancellation, every inventory movement, and saving a buyer or a
+seller, which writes to two tables.
+
+A failed checkout leaves nothing behind: with 50 units in stock, a cart whose
+second line exceeds the available stock answers 400 and the first line's
+reservation is rolled back, so the stock stays at 50 and no order row is
+written.
 
 ## Models
 

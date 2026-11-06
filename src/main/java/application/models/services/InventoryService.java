@@ -36,7 +36,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory register(Long productId, Long variantId, Long warehouseId, int initialQuantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requireNotNegative(initialQuantity, "The initial quantity");
             requireStockableProduct(productId);
             warehouseService.requireActive(warehouseId);
@@ -60,7 +60,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory restock(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity to receive");
             userService.findActiveOrFail(userId);
 
@@ -72,7 +72,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory reserve(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity to reserve");
             userService.findActiveOrFail(userId);
 
@@ -91,7 +91,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory release(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity to release");
             userService.findActiveOrFail(userId);
 
@@ -108,7 +108,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory confirmSale(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity sold");
             userService.findActiveOrFail(userId);
 
@@ -124,7 +124,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory returnToStock(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The quantity returned");
             userService.findActiveOrFail(userId);
 
@@ -137,7 +137,7 @@ public class InventoryService extends BaseService {
 
     public Inventory adjust(Long productId, Long variantId, Long warehouseId, int newQuantity, Long userId,
                             String notes) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requireNotNegative(newQuantity, "The adjusted quantity");
             requireText(notes, "The reason for the adjustment");
             userService.findActiveOrFail(userId);
@@ -151,7 +151,7 @@ public class InventoryService extends BaseService {
     }
 
     public Inventory markAsDamaged(Long productId, Long variantId, Long warehouseId, int quantity, Long userId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requirePositive(quantity, "The damaged quantity");
             userService.findActiveOrFail(userId);
 

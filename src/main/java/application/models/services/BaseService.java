@@ -1,5 +1,6 @@
 package application.models.services;
 
+import application.data.config.TransactionManager;
 import application.shared.exceptions.BusinessRuleException;
 import application.shared.exceptions.DataAccessException;
 import application.shared.exceptions.ResourceNotFoundException;
@@ -21,6 +22,14 @@ public abstract class BaseService {
     protected <R> R execute(DatabaseOperation<R> operation) {
         try {
             return operation.run();
+        } catch (SQLException exception) {
+            throw new DataAccessException("The operation could not be completed in the database", exception);
+        }
+    }
+
+    protected <R> R executeInTransaction(DatabaseOperation<R> operation) {
+        try {
+            return TransactionManager.runInTransaction(operation::run);
         } catch (SQLException exception) {
             throw new DataAccessException("The operation could not be completed in the database", exception);
         }

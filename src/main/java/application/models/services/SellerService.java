@@ -23,7 +23,7 @@ public class SellerService extends BaseService {
     }
 
     public Seller register(Seller seller, Long administratorId) {
-        return execute(() -> {
+        return executeInTransaction(() -> {
             requireIdentifier(administratorId,
                     "The administrator identifier: sellers cannot register themselves");
             userService.requireRole(administratorId, Role.ADMINISTRATOR);
