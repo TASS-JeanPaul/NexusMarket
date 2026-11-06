@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/products/{{physicalProductId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: pm.test('El polimorfismo llega a la respuesta', () => pm.expect(pm.response.json().type).to.eql('PHYSICAL'));
+    language: text/javascript
+order: 11000

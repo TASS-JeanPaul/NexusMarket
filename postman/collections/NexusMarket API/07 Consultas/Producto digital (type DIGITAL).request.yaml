@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/products/{{digitalProductId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: pm.test('La misma ruta devuelve la otra subclase', () => pm.expect(pm.response.json().type).to.eql('DIGITAL'));
+    language: text/javascript
+order: 12000

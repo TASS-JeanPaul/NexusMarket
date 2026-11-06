@@ -5,6 +5,7 @@ import application.data.enums.UserStatus;
 import application.shared.exceptions.ResourceNotFoundException;
 import application.data.ports.out.ISellerRepository;
 import application.data.entities.Seller;
+import application.models.ports.out.IPasswordHasher;
 import java.time.LocalDateTime;
 import java.util.List;
 

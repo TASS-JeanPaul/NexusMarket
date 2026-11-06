@@ -9,6 +9,8 @@ import application.models.ports.in.ICatalogUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,7 @@ public class CatalogController {
 
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category createCategory(@RequestBody Category category) {
+    public Category createCategory(@Valid @RequestBody Category category) {
         return catalogUseCase.createCategory(category);
     }
 
@@ -52,7 +54,7 @@ public class CatalogController {
     }
 
     @PutMapping("/categories/{id}")
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
+    public Category updateCategory(@PathVariable Long id, @Valid @RequestBody Category category) {
         category.setId(id);
         return catalogUseCase.updateCategory(category);
     }
@@ -64,7 +66,7 @@ public class CatalogController {
 
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public Product publishProduct(@RequestBody ProductRequest request) {
+    public Product publishProduct(@Valid @RequestBody ProductRequest request) {
         return catalogUseCase.publishProduct(request.toProduct());
     }
 
@@ -95,7 +97,7 @@ public class CatalogController {
 
     @PutMapping("/products/{id}/information")
     public Product updateProductInformation(@PathVariable Long id,
-                                            @RequestBody ProductInformationRequest request) {
+                                            @Valid @RequestBody ProductInformationRequest request) {
         return catalogUseCase.updateProductInformation(id, request.name(), request.description());
     }
 
@@ -121,7 +123,7 @@ public class CatalogController {
 
     @PostMapping("/products/{id}/variants")
     @ResponseStatus(HttpStatus.CREATED)
-    public Variant addVariant(@PathVariable Long id, @RequestBody Variant variant) {
+    public Variant addVariant(@PathVariable Long id, @Valid @RequestBody Variant variant) {
         return catalogUseCase.addVariant(id, variant);
     }
 

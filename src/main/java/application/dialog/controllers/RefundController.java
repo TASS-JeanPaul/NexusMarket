@@ -6,6 +6,8 @@ import application.models.ports.in.IRefundUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +34,7 @@ public class RefundController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Refund request(@RequestBody RefundRequest request) {
+    public Refund request(@Valid @RequestBody RefundRequest request) {
         return refundUseCase.request(request.returnId(), request.amount(), request.method());
     }
 

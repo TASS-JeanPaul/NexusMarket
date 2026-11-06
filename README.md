@@ -37,15 +37,23 @@ docker compose up -d
 
 ## Run
 
+Everything in containers, the database and the application:
+
 ```
 docker compose up -d
+```
+
+The API then answers on port 8081. To run the application on the host instead,
+against the database in Docker, start only the database and use the wrapper:
+
+```
+docker compose up -d postgres
 .\mvnw.cmd spring-boot:run
 ```
 
-The API answers on `http://localhost:8080`. Every route under `/api` is open
-while the project is in development, so requests can be sent from a browser or
-from Postman without credentials. Anything outside `/api` still asks for the
-password Spring prints at startup.
+The API answers on `http://localhost:8080` when it runs on the host, and on
+`http://localhost:8081` when it runs inside Docker. Every route asks for a token
+except the four listed under Authentication.
 
 To check that it is alive:
 
@@ -70,8 +78,8 @@ Once the API is running, the whole surface is browsable and executable at:
 http://localhost:8080/swagger-ui.html
 ```
 
-The sections are numbered in the order of the business flow, from `00 Salud` to
-`12 Reembolsos`, so the page can be read top to bottom: register the
+The sections are numbered in the order of the business flow, from `00 Autenticacion`
+and `00 Salud` down to `13 Reportes`, so the page can be read top to bottom: register the
 participants, publish the catalogue, load stock, fill the cart, check out, pay,
 dispatch, and return. Every operation has a `Try it out` button, and fields such
 as the product `type` or an order `status` are offered as a list of the values
@@ -104,39 +112,53 @@ Each first level folder is one subsystem of the DSS.
 ```
 src/main/java/application/
 ├── data/                         data management subsystem
-│   ├── config/
-│   │   └── DatabaseConnection.java   JDBC connection (Singleton)
+│   ├── config/                       JDBC connection and transactions
 │   ├── entities/                     business classes
 │   ├── enums/                        status and type catalogues
-│   ├── contracts/                    repository contracts
-│   └── repositories/
-│       ├── BaseRepository.java       operations common to every table
-│       └── ...                       one repository per contract
+│   ├── views/                        aggregated rows the reports return
+│   ├── ports/out/                    the contracts the model asks the data for
+│   └── repositories/                 the adapters that answer them in SQL
 ├── models/                       model management subsystem
-│   └── services/
-│       ├── BaseService.java          validation and error handling shared by services
-│       └── ...                       one service per functional domain
+│   ├── ports/in/                     the operations the outside world may ask for
+│   ├── ports/out/                    what the model needs from the outside
+│   ├── usecases/                     the adapters that answer each input port
+│   ├── services/                     the domain rules
+│   └── reports/                      the classifications the reports carry
 ├── dialog/                       dialog management subsystem
-│   ├── config/
-│   │   └── SecurityConfiguration.java
+│   ├── config/                       security and OpenAPI
+│   ├── security/                     token issuing and the authentication filter
 │   ├── requests/                     bodies that are not entities
-│   ├── responses/                    uniform error body
+│   ├── responses/                    uniform error body and token
 │   ├── controllers/                  one controller per functional domain
 │   └── ApiExceptionHandler.java      turns exceptions into HTTP codes
 ├── shared/
-│   └── exceptions/               business, not found and data access errors
+│   └── exceptions/               business, authentication, not found, data access
 └── NexusMarketApplication.java
 ```
 
 | Subsystem          | Folder    | Holds                                                     |
 |--------------------|-----------|-----------------------------------------------------------|
-| Data management    | `data/`   | the entities, the contracts and the JDBC access to them   |
-| Model management   | `models/` | the services that process the data and apply the rules    |
-| Dialog management  | `dialog/` | the REST entry points that answer a request               |
+| Data management    | `data/`   | the entities, the output ports and the JDBC that answers them |
+| Model management   | `models/` | the input ports, the use cases and the services that apply the rules |
+| Dialog management  | `dialog/` | the REST entry points, the security and the error translation |
 
 Entities live in the data subsystem because they describe data, not processing.
 The enums belong there for the same reason: they state which values a datum may
 take.
+
+### The path of a request
+
+A request always travels the same way, and never backwards:
+
+```
+RestController → PortIn → UseCase → DomainService → PortOut → Persistence Adapter
+```
+
+A controller depends on an input port, never on a service, so the dialog
+subsystem does not know which class ends up doing the work. A service depends on
+an output port, never on a repository, so the model subsystem does not know that
+SQL is what answers it. Both ends of the model are interfaces it owns; the
+adapters on either side are replaceable without touching a single rule.
 
 ## Data access
 
@@ -224,19 +246,22 @@ not force a single change in them.
 No service exposes `SQLException`, so the layers above never learn that JDBC
 sits underneath.
 
-| Exception                   | Meaning                             |
-|-----------------------------|-------------------------------------|
-| `BusinessRuleException`     | a business rule was violated        |
+| Exception                   | Meaning                                 |
+|-----------------------------|-----------------------------------------|
+| `BusinessRuleException`     | a business rule was violated            |
+| `AuthenticationException`   | nobody is identified behind the request |
+| `AuthorizationException`    | the identified user may not do this     |
 | `ResourceNotFoundException` | the requested identifier does not exist |
-| `DataAccessException`       | the database operation failed        |
+| `DataAccessException`       | the database operation failed           |
 
 ## API
 
-One controller per functional domain, each one delegating to its service. A
+One controller per functional domain, each one delegating to its input port. A
 purchase travels through these requests:
 
 ```
 GET  /api/health                        is the API alive, and can it reach the database
+POST /api/auth/login                    obtain the token every other route asks for
 POST /api/users                         register an administrator or an operator
 POST /api/sellers?administratorId=1     register a seller, never self registered
 POST /api/buyers                        register a buyer
@@ -252,6 +277,7 @@ PUT  /api/shipments/{id}/delivery       deliver, which closes the order
 POST /api/returns                       request a return
 PUT  /api/returns/{id}/reception        receive it, which puts the stock back
 POST /api/refunds                       refund the money
+GET  /api/reports/...                   consolidated administrative information
 ```
 
 Each domain also answers `GET` requests for its own data.
@@ -260,14 +286,29 @@ Each domain also answers `GET` requests for its own data.
 takes a body carrying a `type` field, and the controller builds the matching
 subclass. It is the only place where the API has to name the type explicitly.
 
+### Validation
+
+Request bodies carry their own rules as annotations, so a malformed request
+never reaches a service: a price must be positive, a quantity greater than zero,
+an email well formed. Spring checks them before the controller runs and the
+handler turns the failure into a 400 that names every field that was wrong.
+Swagger reads the same annotations, so the documentation states the rules
+without anyone writing them twice.
+
+The services keep validating anyway. The annotations guard the shape of the
+request; the services guard the business, and only they know that a product must
+be published or that a buyer must not be suspended.
+
 ### Errors
 
-A single `@RestControllerAdvice` turns the three exceptions into HTTP codes, so
+A single `@RestControllerAdvice` turns the exceptions into HTTP codes, so
 no controller holds a `try/catch`:
 
 | Exception                   | Code | Example                                      |
 |-----------------------------|------|----------------------------------------------|
 | `BusinessRuleException`     | 400  | insufficient stock, a seller self registering |
+| `AuthenticationException`   | 401  | no token, wrong credentials, expired token    |
+| `AuthorizationException`    | 403  | the wrong role, or another user's information |
 | `ResourceNotFoundException` | 404  | an identifier that does not exist             |
 | `DataAccessException`       | 500  | the database failed                           |
 
@@ -282,12 +323,83 @@ wrote:
 }
 ```
 
-## Pending
+## Authentication
 
-The decision models of the DSS, inside `models/indicators/`: inventory
-restocking, seller performance, catalogue profitability and after sales quality.
-They read aggregated queries over the transactional tables, and the dialog
-subsystem exposes them next to the routes above.
+Constraint RG-01 of the specification says every operation must be performed by
+an authenticated user, so the API hands out a token and asks for it on every
+route except the ones listed below.
+
+```
+POST /api/auth/login     { "email": "...", "password": "..." }
+```
+
+It answers with a signed token, the role it carries and the moment it expires.
+From then on each request sends it:
+
+```
+Authorization: Bearer <token>
+```
+
+Passwords are never stored in the clear: they are hashed with BCrypt, and the
+field is write only, so a user can be created with a password but no response
+ever returns one.
+
+Four things answer without a token: the login, the health check, the buyer
+self-registration and the Swagger pages. A seller cannot self-register
+because the specification says an administrator incorporates them.
+
+### Who may do what
+
+Constraint RG-03 says no participant administers information outside their role,
+and the specification carries a responsibility matrix. The rules live in
+`SecurityConfiguration` and read as that matrix:
+
+| Area                     | Roles allowed                                      |
+|--------------------------|----------------------------------------------------|
+| Users                    | administrator                                      |
+| Seller registration      | administrator                                      |
+| Reports                  | administrator, supervisor                          |
+| Catalogue changes        | seller, administrator                              |
+| Inventory                | seller, logistics operator                         |
+| Warehouses               | seller, logistics operator, administrator          |
+| Shipments                | logistics operator, administrator                  |
+| Cart and checkout        | buyer                                              |
+| Orders                   | buyer, seller, logistics operator, administrator   |
+| Returns                  | buyer requests, administrator or supervisor reviews, operator receives |
+| Refunds                  | buyer, administrator                               |
+
+A request with no token is refused with 401; a token for the wrong role is
+refused with 403. An administrator cannot open a cart, and a buyer cannot read
+the reports.
+
+Belonging to the right role is not enough on its own. A buyer operates on their
+own cart and nobody else's: the cart routes compare the identifier in the path
+against the user the token identifies, so a buyer asking for another buyer's
+cart is refused even though the role is right.
+
+## Reports
+
+Objective OBJ-12 asks to consolidate administrative information for consultation.
+Six reports answer it, each one adding the figures and then classifying them, so
+the answer supports a decision instead of only describing the past:
+
+| Route                               | Answers                                              |
+|-------------------------------------|------------------------------------------------------|
+| `/api/reports/sales-by-seller`      | revenue and return rate per seller, with a standing   |
+| `/api/reports/sales-by-category`    | revenue per category and its share of the total       |
+| `/api/reports/sales-by-product`     | units and revenue per product, with a suggested action |
+| `/api/reports/orders-by-status`     | how many orders sit in each state                     |
+| `/api/reports/inventory`            | stock per warehouse, flagged by how little is left    |
+| `/api/reports/after-sales`          | returns per product and failure rate per carrier      |
+
+A seller is rated `EXCELLENT`, `SOLID`, `WATCH` or `AT_RISK` by its return rate;
+a product `STAR`, `STEADY`, `SLOW` or `DEAD` by what it sold; stock
+`OUT_OF_STOCK`, `CRITICAL`, `LOW` or `HEALTHY` by what is left. All of them take
+`?days=` to move the window, 90 days by default.
+
+The aggregation lives in the data subsystem, in a repository of its own.
+It cannot extend `BaseRepository`, which implements the contract with `save`,
+`update` and `delete`: an aggregate query neither saves nor deletes anything.
 
 ## Transactions
 
@@ -314,6 +426,13 @@ A failed checkout leaves nothing behind: with 50 units in stock, a cart whose
 second line exceeds the available stock answers 400 and the first line's
 reservation is rolled back, so the stock stays at 50 and no order row is
 written.
+
+## Pending
+
+Nothing from the functional specification. The twelve objectives and the three
+general constraints are covered. What is left is optional: a document database
+beside PostgreSQL, which the specification does not ask for since it puts
+storage decisions out of its scope.
 
 ## Models
 

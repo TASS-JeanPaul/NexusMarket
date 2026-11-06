@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/returns/{{returnId}}/approval?reviewerId={{supervisorId}}"
+method: PUT
+queryParams:
+  reviewerId: "{{supervisorId}}"
+scripts:
+  - type: afterResponse
+    code: pm.test('Aprobada', () => pm.expect(pm.response.json().status).to.eql('APPROVED'));
+    language: text/javascript
+order: 2000

@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/returns/{{returnId}}/completion"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: pm.test('Completada', () => pm.expect(pm.response.json().status).to.eql('COMPLETED'));
+    language: text/javascript
+order: 5000

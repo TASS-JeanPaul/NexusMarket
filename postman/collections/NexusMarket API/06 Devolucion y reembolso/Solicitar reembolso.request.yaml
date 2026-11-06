@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/refunds"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "returnId": {{returnId}},
+      "amount": 100000,
+      "method": "BANK_TRANSFER"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('refundId', d.id);
+      pm.test('Pendiente', () => pm.expect(d.status).to.eql('PENDING'));
+    language: text/javascript
+order: 7000

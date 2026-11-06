@@ -9,6 +9,8 @@ import application.models.ports.in.IOrderUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,7 @@ public class OrderController {
 
     @PostMapping("/checkout")
     @ResponseStatus(HttpStatus.CREATED)
-    public Order checkout(@RequestBody CheckoutRequest request) {
+    public Order checkout(@Valid @RequestBody CheckoutRequest request) {
         return orderUseCase.checkout(request.buyerId(), request.deliveryAddressId(), request.warehouseId());
     }
 
@@ -63,12 +65,12 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/payment")
-    public Order markAsPaid(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
+    public Order markAsPaid(@PathVariable Long id, @Valid @RequestBody WarehouseOperationRequest request) {
         return orderUseCase.markAsPaid(id, request.warehouseId(), request.userId());
     }
 
     @PostMapping("/{id}/cancellation")
-    public Order cancel(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
+    public Order cancel(@PathVariable Long id, @Valid @RequestBody WarehouseOperationRequest request) {
         return orderUseCase.cancel(id, request.warehouseId(), request.userId());
     }
 

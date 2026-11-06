@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/buyers/{{buyerId}}/addresses"
+method: GET
+order: 5000

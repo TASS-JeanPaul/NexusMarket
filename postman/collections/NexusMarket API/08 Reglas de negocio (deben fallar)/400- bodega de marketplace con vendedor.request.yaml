@@ -1,0 +1,23 @@
+$kind: http-request
+name: "400: bodega de marketplace con vendedor"
+url: "{{baseUrl}}/warehouses"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "code": "BAD-{{$timestamp}}",
+      "name": "Bodega invalida",
+      "city": "Cali",
+      "type": "MARKETPLACE",
+      "sellerId": {{sellerId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('Mensaje claro', () => pm.expect(pm.response.json().message).to.include('cannot belong to a seller'));
+    language: text/javascript
+order: 5000

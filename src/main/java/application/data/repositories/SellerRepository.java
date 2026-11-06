@@ -15,7 +15,7 @@ import java.util.Optional;
 public class SellerRepository extends BaseRepository<Seller> implements ISellerRepository {
 
     private static final String SELECT_SELLER =
-            "SELECT u.id, u.full_name, u.identity_document, u.email, u.phone, u.role, u.status, "
+            "SELECT u.id, u.full_name, u.identity_document, u.email, u.phone, u.password, u.role, u.status, "
                     + "u.registered_at, s.business_name, s.tax_id, s.registered_by_id "
                     + "FROM seller s JOIN app_user u ON u.id = s.id";
 
@@ -32,6 +32,7 @@ public class SellerRepository extends BaseRepository<Seller> implements ISellerR
         seller.setIdentityDocument(row.getString("identity_document"));
         seller.setEmail(row.getString("email"));
         seller.setPhone(row.getString("phone"));
+        seller.setPassword(row.getString("password"));
         seller.setStatus(UserStatus.valueOf(row.getString("status")));
         seller.setRegisteredAt(toDateTime(row.getTimestamp("registered_at")));
         seller.setBusinessName(row.getString("business_name"));
@@ -58,14 +59,15 @@ public class SellerRepository extends BaseRepository<Seller> implements ISellerR
     @Override
     public Seller save(Seller entity) throws SQLException {
         String userSql = "INSERT INTO app_user "
-                + "(full_name, identity_document, email, phone, role, status, registered_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "(full_name, identity_document, email, phone, password, role, status, registered_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         Long id = insertAndGetId(userSql,
                 entity.getFullName(),
                 entity.getIdentityDocument(),
                 entity.getEmail(),
                 entity.getPhone(),
+                entity.getPassword(),
                 entity.getRole().name(),
                 entity.getStatus().name(),
                 entity.getRegisteredAt());

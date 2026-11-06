@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/refunds/{{refundId}}/payment"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: |-
+      const d = pm.response.json();
+      pm.test('Pagado', () => pm.expect(d.status).to.eql('PAID'));
+      pm.test('Tiene fecha de pago', () => pm.expect(d.paidAt).to.not.be.null);
+    language: text/javascript
+order: 9000

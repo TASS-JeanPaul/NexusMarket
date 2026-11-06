@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/inventory?productId={{physicalProductId}}"
+method: GET
+queryParams:
+  productId: "{{physicalProductId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      const i = pm.response.json()[0];
+      pm.test('59 disponibles: 58 mas la unidad devuelta', () => pm.expect(i.availableQuantity).to.eql(59));
+    language: text/javascript
+order: 4000

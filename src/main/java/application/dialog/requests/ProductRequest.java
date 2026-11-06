@@ -7,14 +7,20 @@ import application.data.enums.ProductType;
 
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public record ProductRequest(
-        String code,
-        String name,
+        @NotBlank String code,
+        @NotBlank String name,
         String description,
-        BigDecimal price,
-        ProductType type,
-        Long sellerId,
-        Long categoryId) {
+        @NotNull @Positive BigDecimal price,
+        @NotNull ProductType type,
+        @NotNull Long sellerId,
+        @NotNull Long categoryId) {
 
     public Product toProduct() {
         Product product = type == ProductType.DIGITAL ? new DigitalProduct() : new PhysicalProduct();

@@ -1,0 +1,28 @@
+$kind: http-request
+name: "Preparar: segunda devolucion de la unidad restante"
+url: "{{baseUrl}}/returns"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "buyerId": {{buyerId}},
+      "orderId": {{orderId}},
+      "reason": "La segunda unidad tambien presento falla",
+      "lines": [
+        {
+          "orderDetailId": {{orderDetailId}},
+          "returnedQuantity": 1,
+          "notes": "Segunda unidad"
+        }
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creada', () => pm.response.to.have.status(201));
+      pm.collectionVariables.set('secondReturnId', pm.response.json().id);
+    language: text/javascript
+order: 7000

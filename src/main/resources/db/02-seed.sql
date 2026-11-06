@@ -1,11 +1,11 @@
-INSERT INTO app_user (id, full_name, identity_document, email, phone, role, status, registered_at) VALUES
-    (1, 'Claudia Rivera',  '1010101010', 'claudia.rivera@nexusmarket.co', '3001112233', 'ADMINISTRATOR',      'ACTIVE', '2026-08-01 08:00:00'),
-    (2, 'Hernan Pulido',   '1020202020', 'hernan.pulido@nexusmarket.co',  '3002223344', 'SUPERVISOR',         'ACTIVE', '2026-08-01 08:30:00'),
-    (3, 'Marcela Osorio',  '1030303030', 'marcela.osorio@nexusmarket.co', '3003334455', 'LOGISTICS_OPERATOR', 'ACTIVE', '2026-08-01 09:00:00'),
-    (4, 'Julian Mesa',     '1040404040', 'julian.mesa@tecnoandina.co',    '3004445566', 'SELLER',             'ACTIVE', '2026-08-05 10:00:00'),
-    (5, 'Paola Guerrero',  '1050505050', 'paola.guerrero@estudiodig.co',  '3005556677', 'SELLER',             'ACTIVE', '2026-08-06 11:00:00'),
-    (6, 'Laura Betancur',  '1060606060', 'laura.betancur@correo.co',      '3006667788', 'BUYER',              'ACTIVE', '2026-08-10 14:00:00'),
-    (7, 'Andres Quintero', '1070707070', 'andres.quintero@correo.co',     '3007778899', 'BUYER',              'ACTIVE', '2026-08-12 16:00:00');
+INSERT INTO app_user (id, full_name, identity_document, email, phone, password, role, status, registered_at) VALUES
+    (1, 'Claudia Rivera',  '1010101010', 'claudia.rivera@nexusmarket.co', '3001112233', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'ADMINISTRATOR',      'ACTIVE', '2026-08-01 08:00:00'),
+    (2, 'Hernan Pulido',   '1020202020', 'hernan.pulido@nexusmarket.co',  '3002223344', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'SUPERVISOR',         'ACTIVE', '2026-08-01 08:30:00'),
+    (3, 'Marcela Osorio',  '1030303030', 'marcela.osorio@nexusmarket.co', '3003334455', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'LOGISTICS_OPERATOR', 'ACTIVE', '2026-08-01 09:00:00'),
+    (4, 'Julian Mesa',     '1040404040', 'julian.mesa@tecnoandina.co',    '3004445566', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'SELLER',             'ACTIVE', '2026-08-05 10:00:00'),
+    (5, 'Paola Guerrero',  '1050505050', 'paola.guerrero@estudiodig.co',  '3005556677', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'SELLER',             'ACTIVE', '2026-08-06 11:00:00'),
+    (6, 'Laura Betancur',  '1060606060', 'laura.betancur@correo.co',      '3006667788', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'BUYER',              'ACTIVE', '2026-08-10 14:00:00'),
+    (7, 'Andres Quintero', '1070707070', 'andres.quintero@correo.co',     '3007778899', '$2a$10$aHiYvSEOVjOQ5raPoP27Gu/5ynkWj3I9DbxSA78OqnPTZUbIHPcsO', 'BUYER',              'ACTIVE', '2026-08-12 16:00:00');
 
 INSERT INTO seller (id, business_name, tax_id, registered_by_id) VALUES
     (4, 'TecnoAndina S.A.S.',   '900123456-1', 1),

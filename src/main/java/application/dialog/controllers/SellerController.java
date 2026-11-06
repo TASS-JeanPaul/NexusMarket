@@ -6,6 +6,8 @@ import application.models.ports.in.ISellerUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +34,7 @@ public class SellerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Seller register(@RequestBody Seller seller, @RequestParam Long administratorId) {
+    public Seller register(@Valid @RequestBody Seller seller, @RequestParam Long administratorId) {
         return sellerUseCase.register(seller, administratorId);
     }
 
@@ -53,7 +55,7 @@ public class SellerController {
 
     @PutMapping("/{id}/business-information")
     public Seller updateBusinessInformation(@PathVariable Long id,
-                                            @RequestBody BusinessInformationRequest request) {
+                                            @Valid @RequestBody BusinessInformationRequest request) {
         return sellerUseCase.updateBusinessInformation(id, request.businessName(), request.phone());
     }
 

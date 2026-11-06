@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/returns/{{returnId}}/reception"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "warehouseId": {{warehouseId}},
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Recibida', () => pm.expect(pm.response.json().status).to.eql('RECEIVED'));
+    language: text/javascript
+order: 3000

@@ -1,0 +1,11 @@
+# Use this workspace to collaborate
+workspace:
+  id: 88bf4d13-eca5-499c-8ed5-f23bac96a5fb
+
+localResources:
+  collections:
+    - ../NexusMarket.postman_collection.json
+
+cloudResources:
+  collections:
+    ../postman/collections/NexusMarket API: dd8f73cf-0069-48c2-8e30-d511f2fe55c2

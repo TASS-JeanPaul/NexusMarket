@@ -3,6 +3,9 @@ package application.models.services;
 import application.data.enums.Role;
 import application.data.enums.UserStatus;
 import application.data.ports.out.IUserRepository;
+import application.models.ports.out.IPasswordHasher;
+import application.shared.exceptions.AuthenticationException;
+import application.shared.exceptions.ResourceNotFoundException;
 import application.data.entities.User;
 
 import org.springframework.stereotype.Service;
@@ -14,9 +17,11 @@ import java.util.List;
 public class UserService extends BaseService {
 
     private final IUserRepository userRepository;
+    private final IPasswordHasher passwordHasher;
 
-    public UserService(IUserRepository userRepository) {
+    public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher) {
         this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
     }
 
     public User register(User user) {
@@ -28,6 +33,8 @@ public class UserService extends BaseService {
             require(userRepository.findByIdentityDocument(user.getIdentityDocument()).isEmpty(),
                     "The identity document " + user.getIdentityDocument() + " is already registered");
 
+            requireText(user.getPassword(), "The password");
+            user.setPassword(passwordHasher.hash(user.getPassword()));
             user.setStatus(UserStatus.ACTIVE);
             user.setRegisteredAt(LocalDateTime.now());
             return userRepository.save(user);
@@ -60,6 +67,32 @@ public class UserService extends BaseService {
         require(user.getRole() == expectedRole,
                 "The user " + id + " does not have the required role " + expectedRole);
         return user;
+    }
+
+    public User authenticate(String email, String password) {
+        requireText(email, "The email");
+        requireText(password, "The password");
+
+        return execute(() -> {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new AuthenticationException("The credentials are not valid"));
+
+            if (!passwordHasher.matches(password, user.getPassword())) {
+                throw new AuthenticationException("The credentials are not valid");
+            }
+            if (user.getStatus() != UserStatus.ACTIVE) {
+                throw new AuthenticationException("The user " + email + " is not active");
+            }
+            return user;
+        });
+    }
+
+    public User findByEmail(String email) {
+        requireText(email, "The email");
+
+        return execute(() -> userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No user is registered with the email " + email)));
     }
 
     public boolean isEmailAvailable(String email) {

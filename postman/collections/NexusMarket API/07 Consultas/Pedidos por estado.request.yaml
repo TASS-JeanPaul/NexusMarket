@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/orders?status=DELIVERED"
+method: GET
+queryParams:
+  status: DELIVERED
+order: 17000

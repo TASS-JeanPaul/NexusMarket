@@ -1,0 +1,23 @@
+$kind: http-request
+name: "400: no se permiten existencias negativas"
+url: "{{baseUrl}}/inventory/reservations"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "productId": {{physicalProductId}},
+      "variantId": {{variantId}},
+      "warehouseId": {{warehouseId}},
+      "quantity": 999999,
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('Avisa que el stock es insuficiente', () => pm.expect(pm.response.json().message).to.include('Insufficient stock'));
+    language: text/javascript
+order: 3000

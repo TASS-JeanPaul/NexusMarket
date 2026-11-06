@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/orders/{{orderId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: pm.test('El envio arrastro al pedido', () => pm.expect(pm.response.json().status).to.eql('SHIPPED'));
+    language: text/javascript
+order: 4000

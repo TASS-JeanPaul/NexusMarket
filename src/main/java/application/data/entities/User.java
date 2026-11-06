@@ -1,5 +1,7 @@
 package application.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +18,9 @@ public class User {
     private String identityDocument;
     private String email;
     private String phone;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
     private Role role;
     private UserStatus status;
     private LocalDateTime registeredAt;

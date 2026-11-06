@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/products/{{physicalProductId}}/variants"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "sku": "SKU-{{$timestamp}}",
+      "name": "Color",
+      "value": "Negro",
+      "additionalPrice": 0
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creada', () => pm.response.to.have.status(201));
+      pm.collectionVariables.set('variantId', pm.response.json().id);
+    language: text/javascript
+order: 4000

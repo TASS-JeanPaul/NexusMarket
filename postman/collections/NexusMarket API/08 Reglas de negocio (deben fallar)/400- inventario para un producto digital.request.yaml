@@ -1,0 +1,22 @@
+$kind: http-request
+name: "400: inventario para un producto digital"
+url: "{{baseUrl}}/inventory"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "productId": {{digitalProductId}},
+      "warehouseId": {{warehouseId}},
+      "initialQuantity": 10,
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('El polimorfismo rechaza el digital', () => pm.expect(pm.response.json().message).to.include('does not manage inventory'));
+    language: text/javascript
+order: 6000

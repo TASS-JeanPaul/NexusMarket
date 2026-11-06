@@ -5,6 +5,9 @@ import application.models.services.UserService;
 import application.data.enums.Role;
 import application.data.enums.UserStatus;
 import application.data.ports.out.IUserRepository;
+import application.models.ports.out.IPasswordHasher;
+import application.shared.exceptions.AuthenticationException;
+import application.shared.exceptions.ResourceNotFoundException;
 import application.data.entities.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +51,16 @@ public class UserUseCase implements IUserUseCase {
     @Override
     public User requireRole(Long id, Role expectedRole) {
         return userService.requireRole(id, expectedRole);
+    }
+
+    @Override
+    public User authenticate(String email, String password) {
+        return userService.authenticate(email, password);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userService.findByEmail(email);
     }
 
     @Override

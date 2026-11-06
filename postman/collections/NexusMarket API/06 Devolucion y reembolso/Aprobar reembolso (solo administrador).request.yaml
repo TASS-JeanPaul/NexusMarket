@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/refunds/{{refundId}}/approval?authorizerId={{adminId}}"
+method: PUT
+queryParams:
+  authorizerId: "{{adminId}}"
+scripts:
+  - type: afterResponse
+    code: pm.test('Aprobado', () => pm.expect(pm.response.json().status).to.eql('APPROVED'));
+    language: text/javascript
+order: 8000

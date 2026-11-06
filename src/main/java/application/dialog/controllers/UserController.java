@@ -8,6 +8,8 @@ import application.models.ports.in.IUserUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody User user) {
+    public User register(@Valid @RequestBody User user) {
         return userUseCase.register(user);
     }
 
@@ -50,7 +52,7 @@ public class UserController {
 
     @PutMapping("/{id}/contact-information")
     public User updateContactInformation(@PathVariable Long id,
-                                         @RequestBody ContactInformationRequest request) {
+                                         @Valid @RequestBody ContactInformationRequest request) {
         return userUseCase.updateContactInformation(id, request.email(), request.phone());
     }
 

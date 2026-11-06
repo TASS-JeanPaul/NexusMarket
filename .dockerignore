@@ -1,0 +1,16 @@
+target/
+.git/
+.gitignore
+.gitattributes
+.vscode/
+.idea/
+.mvn/wrapper/maven-wrapper.jar
+.postman/
+postman/
+*.md
+*.postman_collection.json
+Dockerfile
+docker-compose.yml
+.dockerignore
+mvnw
+mvnw.cmd

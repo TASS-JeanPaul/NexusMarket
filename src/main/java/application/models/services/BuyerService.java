@@ -8,6 +8,8 @@ import application.data.ports.out.IBuyerRepository;
 import application.data.entities.Address;
 import application.data.entities.Buyer;
 
+import application.models.ports.out.IPasswordHasher;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,13 +21,16 @@ public class BuyerService extends BaseService {
     private final IBuyerRepository buyerRepository;
     private final IAddressRepository addressRepository;
     private final UserService userService;
+    private final IPasswordHasher passwordHasher;
 
     public BuyerService(IBuyerRepository buyerRepository,
                         IAddressRepository addressRepository,
-                        UserService userService) {
+                        UserService userService,
+                        IPasswordHasher passwordHasher) {
         this.buyerRepository = buyerRepository;
         this.addressRepository = addressRepository;
         this.userService = userService;
+        this.passwordHasher = passwordHasher;
     }
 
     public Buyer register(Buyer buyer) {
@@ -37,6 +42,8 @@ public class BuyerService extends BaseService {
             require(userService.isEmailAvailable(buyer.getEmail()),
                     "The email " + buyer.getEmail() + " is already registered");
 
+            requireText(buyer.getPassword(), "The password");
+            buyer.setPassword(passwordHasher.hash(buyer.getPassword()));
             buyer.setStatus(UserStatus.ACTIVE);
             buyer.setCommercialStatus(CommercialStatus.ENABLED);
             buyer.setRegisteredAt(LocalDateTime.now());

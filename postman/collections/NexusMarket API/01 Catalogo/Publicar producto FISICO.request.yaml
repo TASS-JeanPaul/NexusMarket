@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/products"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "code": "PHY-{{$timestamp}}",
+      "name": "Audifonos de prueba",
+      "description": "Producto fisico: requiere inventario y despacho",
+      "price": 100000,
+      "type": "PHYSICAL",
+      "sellerId": {{sellerId}},
+      "categoryId": {{categoryId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('physicalProductId', d.id);
+      pm.test('Es fisico', () => pm.expect(d.type).to.eql('PHYSICAL'));
+      pm.test('Queda publicado', () => pm.expect(d.status).to.eql('PUBLISHED'));
+    language: text/javascript
+order: 2000

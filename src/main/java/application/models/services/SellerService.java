@@ -6,6 +6,8 @@ import application.shared.exceptions.ResourceNotFoundException;
 import application.data.ports.out.ISellerRepository;
 import application.data.entities.Seller;
 
+import application.models.ports.out.IPasswordHasher;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,10 +18,13 @@ public class SellerService extends BaseService {
 
     private final ISellerRepository sellerRepository;
     private final UserService userService;
+    private final IPasswordHasher passwordHasher;
 
-    public SellerService(ISellerRepository sellerRepository, UserService userService) {
+    public SellerService(ISellerRepository sellerRepository, UserService userService,
+                        IPasswordHasher passwordHasher) {
         this.sellerRepository = sellerRepository;
         this.userService = userService;
+        this.passwordHasher = passwordHasher;
     }
 
     public Seller register(Seller seller, Long administratorId) {
@@ -40,6 +45,8 @@ public class SellerService extends BaseService {
                     "The tax identification number " + seller.getTaxId() + " is already registered");
 
             seller.setRegisteredById(administratorId);
+            requireText(seller.getPassword(), "The password");
+            seller.setPassword(passwordHasher.hash(seller.getPassword()));
             seller.setStatus(UserStatus.ACTIVE);
             seller.setRegisteredAt(LocalDateTime.now());
             return sellerRepository.save(seller);

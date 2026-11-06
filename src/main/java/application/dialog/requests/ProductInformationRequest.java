@@ -1,4 +1,10 @@
 package application.dialog.requests;
 
-public record ProductInformationRequest(String name, String description) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+
+public record ProductInformationRequest(@NotBlank String name, String description) {
 }

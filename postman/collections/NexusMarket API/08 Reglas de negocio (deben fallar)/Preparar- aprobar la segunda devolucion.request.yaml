@@ -1,0 +1,7 @@
+$kind: http-request
+name: "Preparar: aprobar la segunda devolucion"
+url: "{{baseUrl}}/returns/{{secondReturnId}}/approval?reviewerId={{supervisorId}}"
+method: PUT
+queryParams:
+  reviewerId: "{{supervisorId}}"
+order: 8000

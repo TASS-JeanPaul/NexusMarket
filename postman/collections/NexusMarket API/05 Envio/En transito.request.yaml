@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/shipments/{{shipmentId}}/transit"
+method: PUT
+order: 5000

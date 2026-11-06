@@ -9,6 +9,8 @@ import application.models.ports.in.IInventoryUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,7 @@ public class InventoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Inventory register(@RequestBody InventoryRegistrationRequest request) {
+    public Inventory register(@Valid @RequestBody InventoryRegistrationRequest request) {
         return inventoryUseCase.register(
                 request.productId(),
                 request.variantId(),
@@ -63,7 +65,7 @@ public class InventoryController {
     }
 
     @PostMapping("/restocks")
-    public Inventory restock(@RequestBody InventoryOperationRequest request) {
+    public Inventory restock(@Valid @RequestBody InventoryOperationRequest request) {
         return inventoryUseCase.restock(
                 request.productId(),
                 request.variantId(),
@@ -73,7 +75,7 @@ public class InventoryController {
     }
 
     @PostMapping("/reservations")
-    public Inventory reserve(@RequestBody InventoryOperationRequest request) {
+    public Inventory reserve(@Valid @RequestBody InventoryOperationRequest request) {
         return inventoryUseCase.reserve(
                 request.productId(),
                 request.variantId(),
@@ -83,7 +85,7 @@ public class InventoryController {
     }
 
     @PostMapping("/releases")
-    public Inventory release(@RequestBody InventoryOperationRequest request) {
+    public Inventory release(@Valid @RequestBody InventoryOperationRequest request) {
         return inventoryUseCase.release(
                 request.productId(),
                 request.variantId(),
@@ -93,7 +95,7 @@ public class InventoryController {
     }
 
     @PostMapping("/returns")
-    public Inventory returnToStock(@RequestBody InventoryOperationRequest request) {
+    public Inventory returnToStock(@Valid @RequestBody InventoryOperationRequest request) {
         return inventoryUseCase.returnToStock(
                 request.productId(),
                 request.variantId(),
@@ -103,7 +105,7 @@ public class InventoryController {
     }
 
     @PostMapping("/damages")
-    public Inventory markAsDamaged(@RequestBody InventoryOperationRequest request) {
+    public Inventory markAsDamaged(@Valid @RequestBody InventoryOperationRequest request) {
         return inventoryUseCase.markAsDamaged(
                 request.productId(),
                 request.variantId(),
@@ -113,7 +115,7 @@ public class InventoryController {
     }
 
     @PostMapping("/adjustments")
-    public Inventory adjust(@RequestBody InventoryAdjustmentRequest request) {
+    public Inventory adjust(@Valid @RequestBody InventoryAdjustmentRequest request) {
         return inventoryUseCase.adjust(
                 request.productId(),
                 request.variantId(),

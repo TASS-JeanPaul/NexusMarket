@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/warehouses?onlyActive=true"
+method: GET
+queryParams:
+  onlyActive: "true"
+order: 14000

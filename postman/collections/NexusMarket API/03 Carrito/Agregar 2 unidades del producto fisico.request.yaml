@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/carts/{{buyerId}}/items"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "productId": {{physicalProductId}},
+      "variantId": {{variantId}},
+      "quantity": 2
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Correcto', () => pm.response.to.have.status(200));
+      pm.test('Total 200000', () => pm.expect(Number(pm.response.json().total)).to.eql(200000));
+    language: text/javascript
+order: 2000

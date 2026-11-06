@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/shipments/{{shipmentId}}/preparation"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: pm.test('En preparacion', () => pm.expect(pm.response.json().status).to.eql('IN_PREPARATION'));
+    language: text/javascript
+order: 2000

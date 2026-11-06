@@ -1,0 +1,28 @@
+$kind: http-request
+name: "400: devolver mas unidades de las compradas"
+url: "{{baseUrl}}/returns"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "buyerId": {{buyerId}},
+      "orderId": {{orderId}},
+      "reason": "Intento devolver mas de lo que compre",
+      "lines": [
+        {
+          "orderDetailId": {{orderDetailId}},
+          "returnedQuantity": 50,
+          "notes": "Deberia fallar"
+        }
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('Avisa cuantas quedan por devolver', () => pm.expect(pm.response.json().message).to.include('can still be returned'));
+    language: text/javascript
+order: 10000

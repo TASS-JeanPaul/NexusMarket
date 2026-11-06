@@ -9,6 +9,7 @@ import application.data.ports.out.IAddressRepository;
 import application.data.ports.out.IBuyerRepository;
 import application.data.entities.Address;
 import application.data.entities.Buyer;
+import application.models.ports.out.IPasswordHasher;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/invoices/{{invoiceId}}/payment"
+method: PUT
+order: 5000

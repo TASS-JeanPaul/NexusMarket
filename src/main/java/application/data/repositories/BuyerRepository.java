@@ -16,7 +16,7 @@ import java.util.Optional;
 public class BuyerRepository extends BaseRepository<Buyer> implements IBuyerRepository {
 
     private static final String SELECT_BUYER =
-            "SELECT u.id, u.full_name, u.identity_document, u.email, u.phone, u.role, u.status, "
+            "SELECT u.id, u.full_name, u.identity_document, u.email, u.phone, u.password, u.role, u.status, "
                     + "u.registered_at, b.commercial_status "
                     + "FROM buyer b JOIN app_user u ON u.id = b.id";
 
@@ -33,6 +33,7 @@ public class BuyerRepository extends BaseRepository<Buyer> implements IBuyerRepo
         buyer.setIdentityDocument(row.getString("identity_document"));
         buyer.setEmail(row.getString("email"));
         buyer.setPhone(row.getString("phone"));
+        buyer.setPassword(row.getString("password"));
         buyer.setStatus(UserStatus.valueOf(row.getString("status")));
         buyer.setRegisteredAt(toDateTime(row.getTimestamp("registered_at")));
         buyer.setCommercialStatus(CommercialStatus.valueOf(row.getString("commercial_status")));
@@ -57,14 +58,15 @@ public class BuyerRepository extends BaseRepository<Buyer> implements IBuyerRepo
     @Override
     public Buyer save(Buyer entity) throws SQLException {
         String userSql = "INSERT INTO app_user "
-                + "(full_name, identity_document, email, phone, role, status, registered_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "(full_name, identity_document, email, phone, password, role, status, registered_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         Long id = insertAndGetId(userSql,
                 entity.getFullName(),
                 entity.getIdentityDocument(),
                 entity.getEmail(),
                 entity.getPhone(),
+                entity.getPassword(),
                 entity.getRole().name(),
                 entity.getStatus().name(),
                 entity.getRegisteredAt());

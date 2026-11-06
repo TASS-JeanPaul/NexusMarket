@@ -1,0 +1,21 @@
+$kind: http-request
+name: "400: el reembolso no puede exceder lo devuelto"
+url: "{{baseUrl}}/refunds"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "returnId": {{secondReturnId}},
+      "amount": 99999999,
+      "method": "CARD"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('Topa en el valor devuelto', () => pm.expect(pm.response.json().message).to.include('cannot exceed'));
+    language: text/javascript
+order: 9000

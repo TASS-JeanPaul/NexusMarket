@@ -1,0 +1,23 @@
+$kind: collection
+description: Recorrido completo del API en orden. Cada peticion guarda los identificadores que la siguiente necesita, asi que basta con ejecutar la coleccion de arriba hacia abajo. Los documentos, correos y codigos llevan un sufijo de tiempo, de modo que la coleccion se puede volver a correr sin reiniciar la base de datos.
+variables:
+  baseUrl: http://localhost:8080/api
+  adminId: ""
+  supervisorId: ""
+  operatorId: ""
+  sellerId: ""
+  buyerId: ""
+  addressId: ""
+  categoryId: ""
+  physicalProductId: ""
+  digitalProductId: ""
+  variantId: ""
+  warehouseId: ""
+  inventoryId: ""
+  orderId: ""
+  orderDetailId: ""
+  invoiceId: ""
+  shipmentId: ""
+  returnId: ""
+  secondReturnId: ""
+  refundId: ""

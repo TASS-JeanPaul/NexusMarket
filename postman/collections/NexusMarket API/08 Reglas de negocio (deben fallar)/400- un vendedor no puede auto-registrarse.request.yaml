@@ -1,0 +1,25 @@
+$kind: http-request
+name: "400: un vendedor no puede auto-registrarse"
+url: "{{baseUrl}}/sellers?administratorId={{buyerId}}"
+method: POST
+headers:
+  Content-Type: application/json
+queryParams:
+  administratorId: "{{buyerId}}"
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "Vendedor pirata",
+      "identityDocument": "PIR{{$timestamp}}",
+      "email": "pirata{{$timestamp}}@x.co",
+      "businessName": "Pirata SAS",
+      "taxId": "PIR{{$timestamp}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('400', () => pm.response.to.have.status(400));
+      pm.test('Exige rol de administrador', () => pm.expect(pm.response.json().message).to.include('ADMINISTRATOR'));
+    language: text/javascript
+order: 2000

@@ -5,28 +5,318 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080/api" },
-    { "key": "adminId", "value": "" },
-    { "key": "supervisorId", "value": "" },
-    { "key": "operatorId", "value": "" },
-    { "key": "sellerId", "value": "" },
-    { "key": "buyerId", "value": "" },
-    { "key": "addressId", "value": "" },
-    { "key": "categoryId", "value": "" },
-    { "key": "physicalProductId", "value": "" },
-    { "key": "digitalProductId", "value": "" },
-    { "key": "variantId", "value": "" },
-    { "key": "warehouseId", "value": "" },
-    { "key": "inventoryId", "value": "" },
-    { "key": "orderId", "value": "" },
-    { "key": "orderDetailId", "value": "" },
-    { "key": "invoiceId", "value": "" },
-    { "key": "shipmentId", "value": "" },
-    { "key": "returnId", "value": "" },
-    { "key": "secondReturnId", "value": "" },
-    { "key": "refundId", "value": "" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "adminId",
+      "value": ""
+    },
+    {
+      "key": "supervisorId",
+      "value": ""
+    },
+    {
+      "key": "operatorId",
+      "value": ""
+    },
+    {
+      "key": "sellerId",
+      "value": ""
+    },
+    {
+      "key": "buyerId",
+      "value": ""
+    },
+    {
+      "key": "addressId",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "physicalProductId",
+      "value": ""
+    },
+    {
+      "key": "digitalProductId",
+      "value": ""
+    },
+    {
+      "key": "variantId",
+      "value": ""
+    },
+    {
+      "key": "warehouseId",
+      "value": ""
+    },
+    {
+      "key": "inventoryId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
+    },
+    {
+      "key": "orderDetailId",
+      "value": ""
+    },
+    {
+      "key": "invoiceId",
+      "value": ""
+    },
+    {
+      "key": "shipmentId",
+      "value": ""
+    },
+    {
+      "key": "returnId",
+      "value": ""
+    },
+    {
+      "key": "secondReturnId",
+      "value": ""
+    },
+    {
+      "key": "refundId",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "supervisorToken",
+      "value": ""
+    },
+    {
+      "key": "operatorToken",
+      "value": ""
+    },
+    {
+      "key": "sellerToken",
+      "value": ""
+    },
+    {
+      "key": "buyerToken",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": ""
+    },
+    {
+      "key": "supervisorEmail",
+      "value": ""
+    },
+    {
+      "key": "operatorEmail",
+      "value": ""
+    },
+    {
+      "key": "sellerEmail",
+      "value": ""
+    },
+    {
+      "key": "buyerEmail",
+      "value": ""
+    }
   ],
   "item": [
+    {
+      "name": "00 Autenticacion",
+      "item": [
+        {
+          "name": "Login administrador (seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('adminToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('ADMINISTRATOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"claudia.rivera@nexusmarket.co\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login supervisor (seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('supervisorToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('SUPERVISOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"hernan.pulido@nexusmarket.co\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login operador logistico (seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('operatorToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('LOGISTICS_OPERATOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"marcela.osorio@nexusmarket.co\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login vendedor (seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('sellerToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('SELLER'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"julian.mesa@tecnoandina.co\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login comprador (seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('buyerToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('BUYER'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"laura.betancur@correo.co\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        }
+      ]
+    },
     {
       "name": "Salud del API",
       "event": [
@@ -66,18 +356,32 @@
                   "pm.test('Creado', () => pm.response.to.have.status(201));",
                   "const d = pm.response.json();",
                   "pm.collectionVariables.set('adminId', d.id);",
-                  "pm.test('Queda activo', () => pm.expect(d.status).to.eql('ACTIVE'));"
+                  "pm.test('Queda activo', () => pm.expect(d.status).to.eql('ACTIVE'));",
+                  "pm.collectionVariables.set('adminEmail', pm.response.json().email);"
                 ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Administradora de prueba\",\n  \"identityDocument\": \"ADM{{$timestamp}}\",\n  \"email\": \"admin{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3001112233\",\n  \"role\": \"ADMINISTRATOR\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"fullName\": \"Administradora de prueba\",\n  \"identityDocument\": \"ADM{{$timestamp}}\",\n  \"email\": \"admin{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3001112233\",\n  \"role\": \"ADMINISTRATOR\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/users"
           }
@@ -91,18 +395,32 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Creado', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('supervisorId', pm.response.json().id);"
+                  "pm.collectionVariables.set('supervisorId', pm.response.json().id);",
+                  "pm.collectionVariables.set('supervisorEmail', pm.response.json().email);"
                 ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Supervisor de prueba\",\n  \"identityDocument\": \"SUP{{$timestamp}}\",\n  \"email\": \"supervisor{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3002223344\",\n  \"role\": \"SUPERVISOR\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"fullName\": \"Supervisor de prueba\",\n  \"identityDocument\": \"SUP{{$timestamp}}\",\n  \"email\": \"supervisor{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3002223344\",\n  \"role\": \"SUPERVISOR\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/users"
           }
@@ -116,18 +434,32 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Creado', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('operatorId', pm.response.json().id);"
+                  "pm.collectionVariables.set('operatorId', pm.response.json().id);",
+                  "pm.collectionVariables.set('operatorEmail', pm.response.json().email);"
                 ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Operador logistico de prueba\",\n  \"identityDocument\": \"OPE{{$timestamp}}\",\n  \"email\": \"operador{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3003334455\",\n  \"role\": \"LOGISTICS_OPERATOR\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"fullName\": \"Operador logistico de prueba\",\n  \"identityDocument\": \"OPE{{$timestamp}}\",\n  \"email\": \"operador{{$timestamp}}@nexusmarket.co\",\n  \"phone\": \"3003334455\",\n  \"role\": \"LOGISTICS_OPERATOR\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/users"
           }
@@ -144,18 +476,32 @@
                   "const d = pm.response.json();",
                   "pm.collectionVariables.set('sellerId', d.id);",
                   "pm.test('El rol lo fija el constructor', () => pm.expect(d.role).to.eql('SELLER'));",
-                  "pm.test('Queda registrado por el administrador', () => pm.expect(Number(d.registeredById)).to.eql(Number(pm.collectionVariables.get('adminId'))));"
+                  "pm.test('Queda registrado por el administrador', () => pm.expect(Number(d.registeredById)).to.eql(Number(pm.collectionVariables.get('adminId'))));",
+                  "pm.collectionVariables.set('sellerEmail', pm.response.json().email);"
                 ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Vendedor de prueba\",\n  \"identityDocument\": \"VEN{{$timestamp}}\",\n  \"email\": \"vendedor{{$timestamp}}@tecnoprueba.co\",\n  \"phone\": \"3004445566\",\n  \"businessName\": \"Tecno Prueba S.A.S.\",\n  \"taxId\": \"NIT{{$timestamp}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"fullName\": \"Vendedor de prueba\",\n  \"identityDocument\": \"VEN{{$timestamp}}\",\n  \"email\": \"vendedor{{$timestamp}}@tecnoprueba.co\",\n  \"phone\": \"3004445566\",\n  \"businessName\": \"Tecno Prueba S.A.S.\",\n  \"taxId\": \"NIT{{$timestamp}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/sellers?administratorId={{adminId}}"
           }
@@ -172,20 +518,215 @@
                   "const d = pm.response.json();",
                   "pm.collectionVariables.set('buyerId', d.id);",
                   "pm.test('El rol lo fija el constructor', () => pm.expect(d.role).to.eql('BUYER'));",
-                  "pm.test('Habilitado para comprar', () => pm.expect(d.commercialStatus).to.eql('ENABLED'));"
+                  "pm.test('Habilitado para comprar', () => pm.expect(d.commercialStatus).to.eql('ENABLED'));",
+                  "pm.collectionVariables.set('buyerEmail', pm.response.json().email);"
                 ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Compradora de prueba\",\n  \"identityDocument\": \"COM{{$timestamp}}\",\n  \"email\": \"compradora{{$timestamp}}@correo.co\",\n  \"phone\": \"3006667788\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n  \"fullName\": \"Compradora de prueba\",\n  \"identityDocument\": \"COM{{$timestamp}}\",\n  \"email\": \"compradora{{$timestamp}}@correo.co\",\n  \"phone\": \"3006667788\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/buyers"
+          }
+        },
+        {
+          "name": "Iniciar sesion con el administrador creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('adminToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('ADMINISTRATOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Iniciar sesion con el supervisor creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('supervisorToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('SUPERVISOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{supervisorEmail}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Iniciar sesion con el operador creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('operatorToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('LOGISTICS_OPERATOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{operatorEmail}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Iniciar sesion con el vendedor creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('sellerToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('SELLER'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{sellerEmail}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Iniciar sesion con el comprador creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('buyerToken', d.token);",
+                  "pm.test('Devuelve token', () => pm.expect(d.token).to.be.a('string').and.not.empty);",
+                  "pm.test('Rol esperado', () => pm.expect(d.role).to.eql('BUYER'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{buyerEmail}}\",\n  \"password\": \"nexus123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
           }
         },
         {
@@ -206,11 +747,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"street\": \"Carrera 45 # 26-30\",\n  \"city\": \"Bogota\",\n  \"state\": \"Cundinamarca\",\n  \"notes\": \"Apartamento 502\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/buyers/{{buyerId}}/addresses"
           }
@@ -236,11 +790,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Categoria de prueba {{$timestamp}}\",\n  \"description\": \"Creada por la coleccion de Postman\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/categories"
           }
@@ -264,11 +831,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"code\": \"PHY-{{$timestamp}}\",\n  \"name\": \"Audifonos de prueba\",\n  \"description\": \"Producto fisico: requiere inventario y despacho\",\n  \"price\": 100000,\n  \"type\": \"PHYSICAL\",\n  \"sellerId\": {{sellerId}},\n  \"categoryId\": {{categoryId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/products"
           }
@@ -291,11 +871,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"code\": \"DIG-{{$timestamp}}\",\n  \"name\": \"Licencia de prueba\",\n  \"description\": \"Producto digital: entrega inmediata tras el pago\",\n  \"price\": 50000,\n  \"type\": \"DIGITAL\",\n  \"sellerId\": {{sellerId}},\n  \"categoryId\": {{categoryId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/products"
           }
@@ -316,11 +909,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"sku\": \"SKU-{{$timestamp}}\",\n  \"name\": \"Color\",\n  \"value\": \"Negro\",\n  \"additionalPrice\": 0\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/products/{{physicalProductId}}/variants"
           }
@@ -348,11 +954,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"code\": \"BOD-{{$timestamp}}\",\n  \"name\": \"Bodega de prueba\",\n  \"street\": \"Zona industrial\",\n  \"city\": \"Bogota\",\n  \"type\": \"MARKETPLACE\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/warehouses"
           }
@@ -376,11 +995,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{physicalProductId}},\n  \"variantId\": {{variantId}},\n  \"warehouseId\": {{warehouseId}},\n  \"initialQuantity\": 50,\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/inventory"
           }
@@ -401,11 +1033,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{physicalProductId}},\n  \"variantId\": {{variantId}},\n  \"warehouseId\": {{warehouseId}},\n  \"quantity\": 10,\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/inventory/restocks"
           }
@@ -426,7 +1071,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/inventory/{{inventoryId}}/movements"
           }
         }
@@ -451,7 +1101,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/carts/{{buyerId}}"
           }
         },
@@ -471,11 +1126,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{physicalProductId}},\n  \"variantId\": {{variantId}},\n  \"quantity\": 2\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/carts/{{buyerId}}/items"
           }
@@ -498,11 +1166,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{digitalProductId}},\n  \"quantity\": 1\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/carts/{{buyerId}}/items"
           }
@@ -511,7 +1192,12 @@
           "name": "Ver items del carrito",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/carts/{{buyerId}}/items"
           }
         }
@@ -543,11 +1229,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"buyerId\": {{buyerId}},\n  \"deliveryAddressId\": {{addressId}},\n  \"warehouseId\": {{warehouseId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/orders/checkout"
           }
@@ -570,7 +1269,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/inventory?productId={{physicalProductId}}"
           }
         },
@@ -592,11 +1296,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"warehouseId\": {{warehouseId}},\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/orders/{{orderId}}/payment"
           }
@@ -621,7 +1338,12 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/invoices/by-order?orderId={{orderId}}"
           }
         },
@@ -629,7 +1351,12 @@
           "name": "Marcar la factura como pagada",
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/invoices/{{invoiceId}}/payment"
           }
         }
@@ -657,11 +1384,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"orderId\": {{orderId}},\n  \"sourceWarehouseId\": {{warehouseId}},\n  \"logisticsOperatorId\": {{operatorId}},\n  \"carrier\": \"Coordinadora\",\n  \"deliveryAddress\": \"Carrera 45 # 26-30, Bogota\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/shipments"
           }
@@ -679,7 +1419,16 @@
               }
             }
           ],
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/shipments/{{shipmentId}}/preparation" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/shipments/{{shipmentId}}/preparation"
+          }
         },
         {
           "name": "Despachar (el pedido pasa a SHIPPED)",
@@ -694,7 +1443,16 @@
               }
             }
           ],
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/shipments/{{shipmentId}}/dispatch" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/shipments/{{shipmentId}}/dispatch"
+          }
         },
         {
           "name": "Confirmar que el pedido quedo SHIPPED",
@@ -709,11 +1467,29 @@
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/orders/{{orderId}}" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/orders/{{orderId}}"
+          }
         },
         {
           "name": "En transito",
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/shipments/{{shipmentId}}/transit" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/shipments/{{shipmentId}}/transit"
+          }
         },
         {
           "name": "Entregar (el pedido pasa a DELIVERED)",
@@ -730,7 +1506,16 @@
               }
             }
           ],
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/shipments/{{shipmentId}}/delivery" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/shipments/{{shipmentId}}/delivery"
+          }
         },
         {
           "name": "Confirmar que el pedido quedo DELIVERED",
@@ -745,7 +1530,16 @@
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/orders/{{orderId}}" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/orders/{{orderId}}"
+          }
         }
       ]
     },
@@ -770,11 +1564,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"buyerId\": {{buyerId}},\n  \"orderId\": {{orderId}},\n  \"reason\": \"Una unidad llego con un audifono sin sonido\",\n  \"lines\": [\n    {\n      \"orderDetailId\": {{orderDetailId}},\n      \"returnedQuantity\": 1,\n      \"notes\": \"Unidad defectuosa\"\n    }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/returns"
           }
@@ -794,7 +1601,12 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{supervisorToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/returns/{{returnId}}/approval?reviewerId={{supervisorId}}"
           }
         },
@@ -813,11 +1625,24 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"warehouseId\": {{warehouseId}},\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/returns/{{returnId}}/reception"
           }
@@ -836,7 +1661,16 @@
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/inventory?productId={{physicalProductId}}" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{operatorToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/inventory?productId={{physicalProductId}}"
+          }
         },
         {
           "name": "Completar la devolucion",
@@ -851,7 +1685,16 @@
               }
             }
           ],
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/returns/{{returnId}}/completion" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/returns/{{returnId}}/completion"
+          }
         },
         {
           "name": "Ver el valor devuelto",
@@ -866,7 +1709,16 @@
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/returns/{{returnId}}/returned-value" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/returns/{{returnId}}/returned-value"
+          }
         },
         {
           "name": "Solicitar reembolso",
@@ -886,11 +1738,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"returnId\": {{returnId}},\n  \"amount\": 100000,\n  \"method\": \"BANK_TRANSFER\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/refunds"
           }
@@ -910,7 +1775,12 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/refunds/{{refundId}}/approval?authorizerId={{adminId}}"
           }
         },
@@ -929,23 +1799,152 @@
               }
             }
           ],
-          "request": { "method": "PUT", "header": [], "url": "{{baseUrl}}/refunds/{{refundId}}/payment" }
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/refunds/{{refundId}}/payment"
+          }
         }
       ]
     },
     {
       "name": "07 Consultas",
       "item": [
-        { "name": "Todos los usuarios", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/users" } },
-        { "name": "Usuarios por rol", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/users?role=SELLER" } },
-        { "name": "Un usuario", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/users/{{adminId}}" } },
-        { "name": "Todos los compradores", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/buyers" } },
-        { "name": "Direcciones del comprador", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/buyers/{{buyerId}}/addresses" } },
-        { "name": "Direccion principal", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/buyers/{{buyerId}}/addresses/primary" } },
-        { "name": "Todos los vendedores", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/sellers" } },
-        { "name": "Categorias", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/categories" } },
-        { "name": "Solo productos publicados", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products?onlyPublished=true" } },
-        { "name": "Productos de un vendedor", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products?sellerId={{sellerId}}" } },
+        {
+          "name": "Todos los usuarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Usuarios por rol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/users?role=SELLER"
+          }
+        },
+        {
+          "name": "Un usuario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/users/{{adminId}}"
+          }
+        },
+        {
+          "name": "Todos los compradores",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/buyers"
+          }
+        },
+        {
+          "name": "Direcciones del comprador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/buyers/{{buyerId}}/addresses"
+          }
+        },
+        {
+          "name": "Direccion principal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/buyers/{{buyerId}}/addresses/primary"
+          }
+        },
+        {
+          "name": "Todos los vendedores",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/sellers"
+          }
+        },
+        {
+          "name": "Categorias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/categories"
+          }
+        },
+        {
+          "name": "Solo productos publicados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products?onlyPublished=true"
+          }
+        },
+        {
+          "name": "Productos de un vendedor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products?sellerId={{sellerId}}"
+          }
+        },
         {
           "name": "Producto fisico (type PHYSICAL)",
           "event": [
@@ -953,11 +1952,22 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('El polimorfismo llega a la respuesta', () => pm.expect(pm.response.json().type).to.eql('PHYSICAL'));"]
+                "exec": [
+                  "pm.test('El polimorfismo llega a la respuesta', () => pm.expect(pm.response.json().type).to.eql('PHYSICAL'));"
+                ]
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products/{{physicalProductId}}" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/{{physicalProductId}}"
+          }
         },
         {
           "name": "Producto digital (type DIGITAL)",
@@ -966,22 +1976,153 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('La misma ruta devuelve la otra subclase', () => pm.expect(pm.response.json().type).to.eql('DIGITAL'));"]
+                "exec": [
+                  "pm.test('La misma ruta devuelve la otra subclase', () => pm.expect(pm.response.json().type).to.eql('DIGITAL'));"
+                ]
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products/{{digitalProductId}}" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/{{digitalProductId}}"
+          }
         },
-        { "name": "Variantes del producto", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products/{{physicalProductId}}/variants" } },
-        { "name": "Bodegas activas", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/warehouses?onlyActive=true" } },
-        { "name": "Inventario de una bodega", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/inventory?warehouseId={{warehouseId}}" } },
-        { "name": "Pedidos del comprador", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/orders?buyerId={{buyerId}}" } },
-        { "name": "Pedidos por estado", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/orders?status=DELIVERED" } },
-        { "name": "Detalle del pedido", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/orders/{{orderId}}/details" } },
-        { "name": "Facturas", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/invoices" } },
-        { "name": "Envios entregados", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/shipments?status=DELIVERED" } },
-        { "name": "Devoluciones del comprador", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/returns?buyerId={{buyerId}}" } },
-        { "name": "Reembolso de una devolucion", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/refunds/by-return?returnId={{returnId}}" } }
+        {
+          "name": "Variantes del producto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/{{physicalProductId}}/variants"
+          }
+        },
+        {
+          "name": "Bodegas activas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/warehouses?onlyActive=true"
+          }
+        },
+        {
+          "name": "Inventario de una bodega",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/inventory?warehouseId={{warehouseId}}"
+          }
+        },
+        {
+          "name": "Pedidos del comprador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/orders?buyerId={{buyerId}}"
+          }
+        },
+        {
+          "name": "Pedidos por estado",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/orders?status=DELIVERED"
+          }
+        },
+        {
+          "name": "Detalle del pedido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/orders/{{orderId}}/details"
+          }
+        },
+        {
+          "name": "Facturas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/invoices"
+          }
+        },
+        {
+          "name": "Envios entregados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/shipments?status=DELIVERED"
+          }
+        },
+        {
+          "name": "Devoluciones del comprador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/returns?buyerId={{buyerId}}"
+          }
+        },
+        {
+          "name": "Reembolso de una devolucion",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/refunds/by-return?returnId={{returnId}}"
+          }
+        }
       ]
     },
     {
@@ -1001,7 +2142,16 @@
               }
             }
           ],
-          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products/999999" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/999999"
+          }
         },
         {
           "name": "400: un vendedor no puede auto-registrarse",
@@ -1019,11 +2169,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"fullName\": \"Vendedor pirata\",\n  \"identityDocument\": \"PIR{{$timestamp}}\",\n  \"email\": \"pirata{{$timestamp}}@x.co\",\n  \"businessName\": \"Pirata SAS\",\n  \"taxId\": \"PIR{{$timestamp}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/sellers?administratorId={{buyerId}}"
           }
@@ -1044,11 +2207,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{physicalProductId}},\n  \"variantId\": {{variantId}},\n  \"warehouseId\": {{warehouseId}},\n  \"quantity\": 999999,\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/inventory/reservations"
           }
@@ -1060,17 +2236,32 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('400', () => pm.response.to.have.status(400));"]
+                "exec": [
+                  "pm.test('400', () => pm.response.to.have.status(400));"
+                ]
               }
             }
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"warehouseId\": {{warehouseId}},\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/orders/{{orderId}}/cancellation"
           }
@@ -1091,11 +2282,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"code\": \"BAD-{{$timestamp}}\",\n  \"name\": \"Bodega invalida\",\n  \"city\": \"Cali\",\n  \"type\": \"MARKETPLACE\",\n  \"sellerId\": {{sellerId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/warehouses"
           }
@@ -1116,11 +2320,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productId\": {{digitalProductId}},\n  \"warehouseId\": {{warehouseId}},\n  \"initialQuantity\": 10,\n  \"userId\": {{operatorId}}\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/inventory"
           }
@@ -1141,11 +2358,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"buyerId\": {{buyerId}},\n  \"orderId\": {{orderId}},\n  \"reason\": \"La segunda unidad tambien presento falla\",\n  \"lines\": [\n    {\n      \"orderDetailId\": {{orderDetailId}},\n      \"returnedQuantity\": 1,\n      \"notes\": \"Segunda unidad\"\n    }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/returns"
           }
@@ -1154,7 +2384,12 @@
           "name": "Preparar: aprobar la segunda devolucion",
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{supervisorToken}}"
+              }
+            ],
             "url": "{{baseUrl}}/returns/{{secondReturnId}}/approval?reviewerId={{supervisorId}}"
           }
         },
@@ -1174,11 +2409,24 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"returnId\": {{secondReturnId}},\n  \"amount\": 99999999,\n  \"method\": \"CARD\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/refunds"
           }
@@ -1199,13 +2447,103 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"buyerId\": {{buyerId}},\n  \"orderId\": {{orderId}},\n  \"reason\": \"Intento devolver mas de lo que compre\",\n  \"lines\": [\n    {\n      \"orderDetailId\": {{orderDetailId}},\n      \"returnedQuantity\": 50,\n      \"notes\": \"Deberia fallar\"\n    }\n  ]\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": "{{baseUrl}}/returns"
+          }
+        },
+        {
+          "name": "401: peticion sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/orders?buyerId={{buyerId}}"
+          }
+        },
+        {
+          "name": "403: un comprador no puede ver reportes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reports/sales-by-seller"
+          }
+        },
+        {
+          "name": "401: login con contrasena incorrecta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401', () => pm.response.to.have.status(401));",
+                  "pm.test('Sin token en la respuesta', () => pm.expect(pm.response.json().token).to.be.undefined);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"claudia.rivera@nexusmarket.co\",\n  \"password\": \"incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
           }
         }
       ]

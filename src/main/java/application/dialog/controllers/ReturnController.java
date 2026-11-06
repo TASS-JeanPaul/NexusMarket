@@ -8,6 +8,8 @@ import application.models.ports.in.IReturnUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +37,7 @@ public class ReturnController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductReturn request(@RequestBody ReturnRequest request) {
+    public ProductReturn request(@Valid @RequestBody ReturnRequest request) {
         return returnUseCase.request(
                 request.buyerId(),
                 request.orderId(),
@@ -83,7 +85,7 @@ public class ReturnController {
     }
 
     @PutMapping("/{id}/reception")
-    public ProductReturn receive(@PathVariable Long id, @RequestBody WarehouseOperationRequest request) {
+    public ProductReturn receive(@PathVariable Long id, @Valid @RequestBody WarehouseOperationRequest request) {
         return returnUseCase.receive(id, request.warehouseId(), request.userId());
     }
 

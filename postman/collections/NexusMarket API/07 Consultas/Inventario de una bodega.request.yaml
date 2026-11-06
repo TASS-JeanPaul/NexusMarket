@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/inventory?warehouseId={{warehouseId}}"
+method: GET
+queryParams:
+  warehouseId: "{{warehouseId}}"
+order: 15000

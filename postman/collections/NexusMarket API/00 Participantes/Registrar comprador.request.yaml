@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/buyers"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "Compradora de prueba",
+      "identityDocument": "COM{{$timestamp}}",
+      "email": "compradora{{$timestamp}}@correo.co",
+      "phone": "3006667788"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('buyerId', d.id);
+      pm.test('El rol lo fija el constructor', () => pm.expect(d.role).to.eql('BUYER'));
+      pm.test('Habilitado para comprar', () => pm.expect(d.commercialStatus).to.eql('ENABLED'));
+    language: text/javascript
+order: 5000

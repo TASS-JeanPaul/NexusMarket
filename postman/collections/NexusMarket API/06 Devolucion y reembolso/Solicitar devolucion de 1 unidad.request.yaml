@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/returns"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "buyerId": {{buyerId}},
+      "orderId": {{orderId}},
+      "reason": "Una unidad llego con un audifono sin sonido",
+      "lines": [
+        {
+          "orderDetailId": {{orderDetailId}},
+          "returnedQuantity": 1,
+          "notes": "Unidad defectuosa"
+        }
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creada', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('returnId', d.id);
+      pm.test('Solicitada', () => pm.expect(d.status).to.eql('REQUESTED'));
+    language: text/javascript
+order: 1000

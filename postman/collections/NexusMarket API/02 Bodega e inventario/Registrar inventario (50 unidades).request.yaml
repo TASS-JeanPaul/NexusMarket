@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseUrl}}/inventory"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "productId": {{physicalProductId}},
+      "variantId": {{variantId}},
+      "warehouseId": {{warehouseId}},
+      "initialQuantity": 50,
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('inventoryId', d.id);
+      pm.test('50 disponibles', () => pm.expect(d.availableQuantity).to.eql(50));
+      pm.test('Nada reservado todavia', () => pm.expect(d.reservedQuantity).to.eql(0));
+    language: text/javascript
+order: 2000

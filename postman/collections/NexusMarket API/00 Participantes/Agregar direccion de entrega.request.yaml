@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/buyers/{{buyerId}}/addresses"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "street": "Carrera 45 # 26-30",
+      "city": "Bogota",
+      "state": "Cundinamarca",
+      "notes": "Apartamento 502"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creada', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('addressId', d.id);
+      pm.test('La primera direccion queda como principal', () => pm.expect(d.primary).to.be.true);
+    language: text/javascript
+order: 6000

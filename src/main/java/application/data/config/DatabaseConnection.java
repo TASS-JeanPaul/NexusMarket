@@ -30,9 +30,14 @@ public class DatabaseConnection {
             throw new IllegalStateException("Could not read the database configuration", e);
         }
 
-        this.url = properties.getProperty("db.url");
-        this.username = properties.getProperty("db.username");
-        this.password = properties.getProperty("db.password");
+        this.url = resolve("DB_URL", properties.getProperty("db.url"));
+        this.username = resolve("DB_USERNAME", properties.getProperty("db.username"));
+        this.password = resolve("DB_PASSWORD", properties.getProperty("db.password"));
+    }
+
+    private static String resolve(String environmentVariable, String fallback) {
+        String value = System.getenv(environmentVariable);
+        return value == null || value.isBlank() ? fallback : value;
     }
 
     public static synchronized DatabaseConnection getInstance() {

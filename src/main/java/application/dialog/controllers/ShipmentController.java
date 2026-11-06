@@ -7,6 +7,8 @@ import application.models.ports.in.IShipmentUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,7 @@ public class ShipmentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Shipment createFor(@RequestBody ShipmentRequest request) {
+    public Shipment createFor(@Valid @RequestBody ShipmentRequest request) {
         return shipmentUseCase.createFor(
                 request.orderId(),
                 request.sourceWarehouseId(),

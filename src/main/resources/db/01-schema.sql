@@ -4,6 +4,7 @@ CREATE TABLE app_user (
     identity_document VARCHAR(30)  NOT NULL UNIQUE,
     email             VARCHAR(150) NOT NULL UNIQUE,
     phone             VARCHAR(30),
+    password          VARCHAR(100) NOT NULL,
     role              VARCHAR(20)  NOT NULL
         CHECK (role IN ('BUYER', 'SELLER', 'LOGISTICS_OPERATOR', 'ADMINISTRATOR', 'SUPERVISOR')),
     status            VARCHAR(20)  NOT NULL

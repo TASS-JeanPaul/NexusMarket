@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/invoices/by-order?orderId={{orderId}}"
+method: GET
+queryParams:
+  orderId: "{{orderId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Correcto', () => pm.response.to.have.status(200));
+      const d = pm.response.json();
+      pm.collectionVariables.set('invoiceId', d.id);
+      pm.test('Subtotal 250000', () => pm.expect(Number(d.subtotal)).to.eql(250000));
+      pm.test('IVA del 19 por ciento', () => pm.expect(Number(d.taxes)).to.eql(47500));
+      pm.test('Total 297500', () => pm.expect(Number(d.total)).to.eql(297500));
+    language: text/javascript
+order: 4000

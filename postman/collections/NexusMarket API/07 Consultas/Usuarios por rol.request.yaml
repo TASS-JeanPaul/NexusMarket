@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/users?role=SELLER"
+method: GET
+queryParams:
+  role: SELLER
+order: 2000

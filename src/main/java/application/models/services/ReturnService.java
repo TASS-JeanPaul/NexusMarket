@@ -213,7 +213,12 @@ public class ReturnService extends BaseService {
             int alreadyReturned = 0;
             for (ProductReturnDetail previous : returnDetailRepository
                     .findByOrderDetailId(line.getOrderDetailId())) {
-                alreadyReturned += previous.getReturnedQuantity();
+                ProductReturn parent = findOrFail(returnRepository.findById(previous.getReturnId()),
+                        "Return", previous.getReturnId());
+
+                if (parent.getStatus() != ReturnStatus.REJECTED) {
+                    alreadyReturned += previous.getReturnedQuantity();
+                }
             }
 
             int returnable = orderDetail.getQuantity() - alreadyReturned;

@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/sellers?administratorId={{adminId}}"
+method: POST
+headers:
+  Content-Type: application/json
+queryParams:
+  administratorId: "{{adminId}}"
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "Vendedor de prueba",
+      "identityDocument": "VEN{{$timestamp}}",
+      "email": "vendedor{{$timestamp}}@tecnoprueba.co",
+      "phone": "3004445566",
+      "businessName": "Tecno Prueba S.A.S.",
+      "taxId": "NIT{{$timestamp}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('sellerId', d.id);
+      pm.test('El rol lo fija el constructor', () => pm.expect(d.role).to.eql('SELLER'));
+      pm.test('Queda registrado por el administrador', () => pm.expect(Number(d.registeredById)).to.eql(Number(pm.collectionVariables.get('adminId'))));
+    language: text/javascript
+order: 4000

@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/shipments/{{shipmentId}}/delivery"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: |-
+      const d = pm.response.json();
+      pm.test('Entregado', () => pm.expect(d.status).to.eql('DELIVERED'));
+      pm.test('Tiene fecha de entrega', () => pm.expect(d.deliveredAt).to.not.be.null);
+    language: text/javascript
+order: 6000

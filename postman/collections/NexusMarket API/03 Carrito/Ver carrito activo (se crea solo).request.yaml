@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/carts/{{buyerId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Correcto', () => pm.response.to.have.status(200));
+      pm.test('Activo', () => pm.expect(pm.response.json().active).to.be.true);
+    language: text/javascript
+order: 1000

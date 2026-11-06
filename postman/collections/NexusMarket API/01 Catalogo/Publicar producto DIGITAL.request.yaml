@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/products"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "code": "DIG-{{$timestamp}}",
+      "name": "Licencia de prueba",
+      "description": "Producto digital: entrega inmediata tras el pago",
+      "price": 50000,
+      "type": "DIGITAL",
+      "sellerId": {{sellerId}},
+      "categoryId": {{categoryId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('digitalProductId', d.id);
+      pm.test('Es digital', () => pm.expect(d.type).to.eql('DIGITAL'));
+    language: text/javascript
+order: 3000

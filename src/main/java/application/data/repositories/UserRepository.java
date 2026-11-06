@@ -28,6 +28,7 @@ public class UserRepository extends BaseRepository<User> implements IUserReposit
         user.setIdentityDocument(row.getString("identity_document"));
         user.setEmail(row.getString("email"));
         user.setPhone(row.getString("phone"));
+        user.setPassword(row.getString("password"));
         user.setRole(Role.valueOf(row.getString("role")));
         user.setStatus(UserStatus.valueOf(row.getString("status")));
         user.setRegisteredAt(toDateTime(row.getTimestamp("registered_at")));
@@ -37,14 +38,15 @@ public class UserRepository extends BaseRepository<User> implements IUserReposit
     @Override
     public User save(User entity) throws SQLException {
         String sql = "INSERT INTO app_user "
-                + "(full_name, identity_document, email, phone, role, status, registered_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "(full_name, identity_document, email, phone, password, role, status, registered_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         entity.setId(insertAndGetId(sql,
                 entity.getFullName(),
                 entity.getIdentityDocument(),
                 entity.getEmail(),
                 entity.getPhone(),
+                entity.getPassword(),
                 entity.getRole().name(),
                 entity.getStatus().name(),
                 entity.getRegisteredAt()));

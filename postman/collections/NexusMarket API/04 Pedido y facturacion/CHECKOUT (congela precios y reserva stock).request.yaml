@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/orders/checkout"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "buyerId": {{buyerId}},
+      "deliveryAddressId": {{addressId}},
+      "warehouseId": {{warehouseId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('orderId', d.id);
+      const fisico = d.details.find(x => Number(x.productId) === Number(pm.collectionVariables.get('physicalProductId')));
+      pm.collectionVariables.set('orderDetailId', fisico.id);
+      pm.test('Pendiente de pago', () => pm.expect(d.status).to.eql('PENDING_PAYMENT'));
+      pm.test('Total 250000', () => pm.expect(Number(d.total)).to.eql(250000));
+      pm.test('El detalle congelo el nombre del producto', () => pm.expect(fisico.productName).to.eql('Audifonos de prueba'));
+      pm.test('El detalle congelo el precio', () => pm.expect(Number(fisico.unitPrice)).to.eql(100000));
+    language: text/javascript
+order: 1000

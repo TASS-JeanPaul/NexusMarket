@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/warehouses"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "code": "BOD-{{$timestamp}}",
+      "name": "Bodega de prueba",
+      "street": "Zona industrial",
+      "city": "Bogota",
+      "type": "MARKETPLACE"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creada', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('warehouseId', d.id);
+      pm.test('Sin vendedor dueno', () => pm.expect(d.sellerId).to.be.null);
+    language: text/javascript
+order: 1000

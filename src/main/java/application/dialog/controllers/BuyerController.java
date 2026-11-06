@@ -6,6 +6,8 @@ import application.models.ports.in.IBuyerUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,7 @@ public class BuyerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Buyer register(@RequestBody Buyer buyer) {
+    public Buyer register(@Valid @RequestBody Buyer buyer) {
         return buyerUseCase.register(buyer);
     }
 
@@ -58,7 +60,7 @@ public class BuyerController {
 
     @PostMapping("/{id}/addresses")
     @ResponseStatus(HttpStatus.CREATED)
-    public Address addAddress(@PathVariable Long id, @RequestBody Address address) {
+    public Address addAddress(@PathVariable Long id, @Valid @RequestBody Address address) {
         return buyerUseCase.addAddress(id, address);
     }
 

@@ -1,0 +1,18 @@
+$kind: http-request
+name: "400: un pedido entregado no se puede cancelar"
+url: "{{baseUrl}}/orders/{{orderId}}/cancellation"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "warehouseId": {{warehouseId}},
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('400', () => pm.response.to.have.status(400));
+    language: text/javascript
+order: 4000

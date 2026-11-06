@@ -5,6 +5,8 @@ import application.models.ports.in.IWarehouseUseCase;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +33,7 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Warehouse create(@RequestBody Warehouse warehouse) {
+    public Warehouse create(@Valid @RequestBody Warehouse warehouse) {
         return warehouseUseCase.create(warehouse);
     }
 
@@ -55,7 +57,7 @@ public class WarehouseController {
     }
 
     @PutMapping("/{id}")
-    public Warehouse update(@PathVariable Long id, @RequestBody Warehouse warehouse) {
+    public Warehouse update(@PathVariable Long id, @Valid @RequestBody Warehouse warehouse) {
         warehouse.setId(id);
         return warehouseUseCase.update(warehouse);
     }

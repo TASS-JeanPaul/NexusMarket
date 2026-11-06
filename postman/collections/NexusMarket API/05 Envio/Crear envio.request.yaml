@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseUrl}}/shipments"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "orderId": {{orderId}},
+      "sourceWarehouseId": {{warehouseId}},
+      "logisticsOperatorId": {{operatorId}},
+      "carrier": "Coordinadora",
+      "deliveryAddress": "Carrera 45 # 26-30, Bogota"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Creado', () => pm.response.to.have.status(201));
+      const d = pm.response.json();
+      pm.collectionVariables.set('shipmentId', d.id);
+      pm.test('Pendiente', () => pm.expect(d.status).to.eql('PENDING'));
+      pm.test('Tiene numero de guia', () => pm.expect(d.trackingNumber).to.include('SHP-'));
+    language: text/javascript
+order: 1000

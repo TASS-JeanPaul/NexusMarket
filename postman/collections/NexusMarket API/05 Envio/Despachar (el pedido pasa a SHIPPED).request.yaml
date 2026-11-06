@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/shipments/{{shipmentId}}/dispatch"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: pm.test('Despachado', () => pm.expect(pm.response.json().status).to.eql('SHIPPED'));
+    language: text/javascript
+order: 3000

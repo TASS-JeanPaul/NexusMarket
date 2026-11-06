@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/orders/{{orderId}}/payment"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "warehouseId": {{warehouseId}},
+      "userId": {{operatorId}}
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Correcto', () => pm.response.to.have.status(200));
+      const d = pm.response.json();
+      pm.test('Pagado', () => pm.expect(d.status).to.eql('PAID'));
+      pm.test('No se cierra porque falta despachar', () => pm.expect(d.completedAt).to.be.null);
+    language: text/javascript
+order: 3000

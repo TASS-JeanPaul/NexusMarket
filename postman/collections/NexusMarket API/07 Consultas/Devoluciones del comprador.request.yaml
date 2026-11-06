@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/returns?buyerId={{buyerId}}"
+method: GET
+queryParams:
+  buyerId: "{{buyerId}}"
+order: 21000
